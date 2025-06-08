@@ -96,8 +96,9 @@ export function LoginFlow({
     setError('');
     try {
       const response = await axios.post('/api/auth/verify-otp', { email, otp: currentOtp });
-      login(email, response.data.token);
+      
       if (response.data.isExistingUser) {
+        login(email, response.data.token);
         if (onLoginSuccess) {
           onLoginSuccess();
         } else {

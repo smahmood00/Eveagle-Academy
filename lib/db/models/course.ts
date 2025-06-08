@@ -89,6 +89,11 @@ courseSchema.pre('save', function(next) {
 });
 
 // Export the model
-const Course = models.Course || model<ICourse>('Course', courseSchema);
+let Course;
+try {
+  Course = models.Course || model<ICourse>('Course', courseSchema);
+} catch {
+  Course = model<ICourse>('Course', courseSchema);
+}
 
 export default Course; 

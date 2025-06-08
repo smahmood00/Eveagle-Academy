@@ -1,11 +1,11 @@
 import { NextResponse } from 'next/server';
-import connectDB from '@/lib/db/connect';
+import { connectToDB } from '@/lib/db/connect';
 import { User } from '@/lib/db/models/user';
 import { signToken } from '@/lib/auth/jwt';
 
 export async function POST(request: Request) {
   try {
-    await connectDB();
+    await connectToDB();
 
     const { email, firstName, lastName, phoneNumber } = await request.json();
     

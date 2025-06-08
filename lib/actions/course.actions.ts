@@ -14,7 +14,7 @@ export async function getPublishedCourses(): Promise<ICourse[]> {
     console.error('Error fetching courses:', error);
     return [];
   }
-}
+} 
 
 export async function getCourseBySlug(slug: string): Promise<ICourse | null> {
   try {

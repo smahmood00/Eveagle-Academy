@@ -6,7 +6,7 @@ import axios from 'axios';
 interface AuthContextType {
   isAuthenticated: boolean;
   userEmail: string | null;
-  login: (email: string) => void;
+  login: (email: string, token: string) => void;
   logout: () => void;
   isLoading: boolean;
 }
@@ -40,7 +40,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => window.removeEventListener('focus', checkAuthStatus);
   }, []);
 
-  const login = (email: string) => {
+  const login = (email: string, token: string) => {
     setIsAuthenticated(true);
     setUserEmail(email);
   };

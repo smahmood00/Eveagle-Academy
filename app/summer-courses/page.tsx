@@ -51,7 +51,7 @@ export default async function SummerCoursesPage() {
                         {course.totalHours} Hours
                       </span>
                     </div>
-
+                   
                     {/* Badges Row 2 */}
                     <div className="flex flex-wrap gap-2 mb-4">
                       <span className="flex items-center gap-1 px-3 py-1 rounded-full bg-blue-500/20 border border-blue-500/30 text-blue-300 text-xs">

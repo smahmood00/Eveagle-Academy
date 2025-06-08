@@ -1,13 +1,13 @@
 import { NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
-import connectDB from '@/lib/db/connect';
+import { connectToDB } from '@/lib/db/connect';
 import { User } from '@/lib/db/models/user';
 import { OTP } from '@/lib/db/models/otp';
 import { signToken } from '@/lib/auth/jwt';
 
 export async function POST(request: Request) {
   try {
-    await connectDB();
+    await connectToDB();
 
     const { email, otp } = await request.json();
     

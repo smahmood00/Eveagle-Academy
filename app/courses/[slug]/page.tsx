@@ -4,13 +4,18 @@ import { ICourse } from "@/lib/db/models/course";
 import { Clock, Book, Wrench, CheckCircle2 } from "lucide-react";
 import { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 
 interface Props {
   params: { slug: string };
 }
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const course = await getCourseBySlug(params.slug);
+export async function generateMetadata(
+  { params }: Props
+): Promise<Metadata> {
+  // Ensure params is resolved
+  const resolvedParams = await Promise.resolve(params);
+  const course = await getCourseBySlug(resolvedParams.slug);
 
   if (!course) {
     return {
@@ -24,8 +29,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function CourseDetailPage({ params }: Props) {
-  const course = await getCourseBySlug(params.slug);
+export default async function CourseDetailPage(
+  { params }: Props
+) {
+  // Ensure params is resolved
+  const resolvedParams = await Promise.resolve(params);
+  const course = await getCourseBySlug(resolvedParams.slug);
 
   if (!course) {
     notFound();
@@ -106,9 +115,12 @@ export default async function CourseDetailPage({ params }: Props) {
                   {course.overviewDescription}
                 </p>
                 <div className="pt-4">
-                  <button className="w-full py-4 px-6 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-xl font-medium transition-all duration-300 hover:scale-[1.02] text-lg">
+                  <Link
+                    href={`/checkout/${course.slug}`}
+                    className="block w-full py-4 px-6 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-xl font-medium transition-all duration-300 hover:scale-[1.02] text-lg text-center"
+                  >
                     Enroll Now - ${course.price} USD
-                  </button>
+                  </Link>
                 </div>
               </div>
             </div>
@@ -181,9 +193,12 @@ export default async function CourseDetailPage({ params }: Props) {
             <div className="bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-2xl p-8 border border-purple-500/30 max-w-lg mx-auto">
               <h3 className="text-2xl font-bold mb-2">Ready to Get Started?</h3>
               <p className="text-zinc-300 mb-6">Join our course today and start your learning journey!</p>
-              <button className="w-full py-4 px-6 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-xl font-medium transition-all duration-300 hover:scale-[1.02] text-lg">
+              <Link
+                href={`/checkout/${course.slug}`}
+                className="block w-full py-4 px-6 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-xl font-medium transition-all duration-300 hover:scale-[1.02] text-lg text-center"
+              >
                 Enroll Now - ${course.price} USD
-              </button>
+              </Link>
             </div>
           </div>
         </div>

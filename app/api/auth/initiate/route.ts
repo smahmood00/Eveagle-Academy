@@ -1,15 +1,12 @@
 import { NextResponse } from 'next/server';
-import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 import nodemailer from 'nodemailer';
 import { OTP } from '@/lib/db/models/otp';
 import { User } from '@/lib/db/models/user';
 import { connectToDB } from '@/lib/db/connect';
 
-const MONGODB_URI = process.env.MONGODB_URI!;
-
-if (!MONGODB_URI) {
-  throw new Error('Please define the MONGODB_URI environment variable inside .env.local');
+if (!process.env.MONGODB_URI) {
+  throw new Error('Please define the MONGODB_URI environment variable inside .env');
 }
 
 const transporter = nodemailer.createTransport({
@@ -39,9 +36,6 @@ export async function POST(req: Request) {
       );
     }
 
-    // Connect using Mongoose
-    console.log('🔄 Attempting to connect to MongoDB...');
-    await mongoose.connect(MONGODB_URI);
     console.log('✅ Successfully connected to MongoDB!');
     
     const otp = generateOTP();
