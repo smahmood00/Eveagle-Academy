@@ -3,23 +3,34 @@
 import { motion } from "framer-motion"
 import { useMobile } from "@/hooks/use-mobile"
 
-const features = [
+const experiences = [
   {
-    title: "Stay Ahead of the Curve",
-    description: "We bring the forefront of technology directly to your child's fingertips."
+    title: "Senior Frontend Engineer",
+    company: "Tech Innovations Inc.",
+    period: "2021 - Present",
+    description:
+      "Lead the frontend development team in building a SaaS platform. Implemented new features, improved performance, and mentored junior developers.",
   },
   {
-    title: "Innovative Curriculum",
-    description: "From foundational coding to advanced AI concepts, our programs are designed to challenge and excite young minds."
+    title: "Frontend Developer",
+    company: "Digital Solutions Co.",
+    period: "2019 - 2021",
+    description:
+      "Developed responsive web applications using React and TypeScript. Collaborated with designers and backend engineers to deliver high-quality products.",
   },
   {
-    title: "Personalized Growth",
-    description: "We tailor learning paths to each child's unique interests and pace, nurturing creativity and confidence."
+    title: "Web Developer",
+    company: "Creative Agency",
+    period: "2017 - 2019",
+    description:
+      "Built websites and web applications for various clients. Worked with HTML, CSS, JavaScript, and WordPress.",
   },
   {
-    title: "Future-Ready Skills",
-    description: "Beyond coding, we cultivate critical thinking, collaboration, and adaptability — essential skills for tomorrow's leaders."
-  }
+    title: "Intern",
+    company: "Startup Hub",
+    period: "2016 - 2017",
+    description: "Assisted in developing web applications and learned modern web development practices.",
+  },
 ]
 
 export function Timeline() {
@@ -33,7 +44,7 @@ export function Timeline() {
           : ""
       }`}
     >
-      {features.map((feature, index) => (
+      {experiences.map((experience, index) => (
         <div
           key={index}
           className={`relative z-10 flex items-center ${index % 2 === 0 ? "md:flex-row-reverse" : "md:flex-row"}`}
@@ -49,8 +60,11 @@ export function Timeline() {
               <div className="absolute -inset-1 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-xl blur opacity-25 hover:opacity-100 transition duration-1000 hover:duration-200"></div>
 
               <div className="relative">
-                <h3 className="text-xl font-bold text-purple-400">{feature.title}</h3>
-                <p className="text-zinc-300 mt-4">{feature.description}</p>
+                <h3 className="text-xl font-bold">{experience.title}</h3>
+                <div className="text-zinc-400 mb-4">
+                  {experience.company} | {experience.period}
+                </div>
+                <p className="text-zinc-300">{experience.description}</p>
               </div>
             </div>
           </motion.div>

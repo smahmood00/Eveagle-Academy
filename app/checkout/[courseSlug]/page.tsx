@@ -100,15 +100,26 @@ export default function CheckoutPage({ params }: Props) {
       setPaymentLoading(true);
       setPaymentError('');
 
-      console.log('Selected payment method:', method, {
-        courseSlug: params.courseSlug,
-        purchaseType: selectedChild ? 'child' : 'myself',
-        age: selectedChild ? selectedChild.age : parseInt(age),
-        childId: selectedChild?._id,
-      });
+      if (method === 'card') {
+        // Create Stripe checkout session
+        const response = await axios.post('/api/payments/stripe/create-session', {
+          courseSlug: params.courseSlug,
+          purchaseType: selectedChild ? 'child' : 'myself',
+          studentId: selectedChild ? selectedChild._id : userEmail,
+        });
 
+        // Redirect to Stripe checkout
+        window.location.href = response.data.sessionUrl;
+      } else {
+        // Handle FPS payment
+        console.log('FPS payment selected', {
+          courseSlug: params.courseSlug,
+          purchaseType: selectedChild ? 'child' : 'myself',
+          studentId: selectedChild ? selectedChild._id : userEmail,
+        });
+      }
     } catch (err: any) {
-      setPaymentError('Failed to process payment. Please try again.');
+      setPaymentError(err.response?.data?.message || 'Failed to process payment. Please try again.');
       console.error('Payment error:', err);
     } finally {
       setPaymentLoading(false);
@@ -255,14 +266,38 @@ export default function CheckoutPage({ params }: Props) {
             >
               Back
             </Button>
-            <div className="space-y-4">
+
+            <div className="space-y-6">
               <div>
                 <h2 className="text-2xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">
-                  Select Payment Method
+                  Payment Method
                 </h2>
                 <p className="text-sm text-zinc-400 mt-1">
-                  Choose how you'd like to pay
+                  Select your preferred payment method
                 </p>
+              </div>
+
+              {/* Order Summary */}
+              <div className="bg-zinc-900/50 rounded-xl p-4 border border-purple-500/20">
+                <h3 className="font-medium mb-2">Order Summary</h3>
+                <div className="space-y-2 text-sm text-zinc-400">
+                  <div className="flex justify-between">
+                    <span>Course:</span>
+                    <span className="text-white">{course.title}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>For:</span>
+                    <span className="text-white">
+                      {selectedChild 
+                        ? `${selectedChild.firstName} ${selectedChild.lastName}`
+                        : 'Yourself'}
+                    </span>
+                  </div>
+                  <div className="flex justify-between border-t border-zinc-800 mt-2 pt-2 text-base">
+                    <span>Total:</span>
+                    <span className="text-white font-medium">HKD {course.price}</span>
+                  </div>
+                </div>
               </div>
 
               {paymentError && (
@@ -271,32 +306,38 @@ export default function CheckoutPage({ params }: Props) {
                 </p>
               )}
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* Payment Buttons */}
+              <div className="space-y-3">
                 <Button
-                  onClick={() => handlePaymentMethodSelect('card')}
+                  onClick={() => handlePaymentMethodSelect('fps')}
                   disabled={paymentLoading}
-                  className="relative h-auto py-6 bg-gradient-to-r from-purple-500/10 to-pink-500/10 hover:from-purple-500/20 hover:to-pink-500/20 border border-purple-500/20"
+                  className="w-full h-auto py-4 bg-gradient-to-r from-purple-500/10 to-pink-500/10 hover:from-purple-500/20 hover:to-pink-500/20 border border-purple-500/20"
                   variant="ghost"
                 >
-                  <div className="flex flex-col items-center space-y-2">
-                    <CreditCard className="h-8 w-8 text-purple-400" />
-                    <span className="text-lg font-medium">Credit Card</span>
-                    <p className="text-sm text-zinc-400">Pay with Visa, Mastercard, etc.</p>
+                  <div className="flex items-center justify-center space-x-3">
+                    <Banknote className="h-5 w-5 text-purple-400" />
+                    <span className="text-base font-medium">Pay with FPS</span>
                   </div>
                 </Button>
 
                 <Button
-                  onClick={() => handlePaymentMethodSelect('fps')}
+                  onClick={() => handlePaymentMethodSelect('card')}
                   disabled={paymentLoading}
-                  className="relative h-auto py-6 bg-gradient-to-r from-purple-500/10 to-pink-500/10 hover:from-purple-500/20 hover:to-pink-500/20 border border-purple-500/20"
+                  className="w-full h-auto py-4 bg-gradient-to-r from-purple-500/10 to-pink-500/10 hover:from-purple-500/20 hover:to-pink-500/20 border border-purple-500/20"
                   variant="ghost"
                 >
-                  <div className="flex flex-col items-center space-y-2">
-                    <Banknote className="h-8 w-8 text-purple-400" />
-                    <span className="text-lg font-medium">FPS</span>
-                    <p className="text-sm text-zinc-400">Pay with Hong Kong FPS</p>
+                  <div className="flex items-center justify-center space-x-3">
+                    <CreditCard className="h-5 w-5 text-purple-400" />
+                    <span className="text-base font-medium">Pay with Card</span>
                   </div>
                 </Button>
+              </div>
+
+              {/* Payment Notes */}
+              <div className="text-xs text-zinc-500 space-y-1">
+                <p>• All payments are processed securely</p>
+                <p>• FPS payments are processed in HKD</p>
+                <p>• Card payments are processed in HKD</p>
               </div>
             </div>
           </div>
@@ -349,7 +390,7 @@ export default function CheckoutPage({ params }: Props) {
                 {/* Price */}
                 <div className="flex items-baseline gap-2">
                   <span className="text-2xl font-bold text-purple-300">${course.price}</span>
-                  <span className="text-zinc-400">USD</span>
+                  <span className="text-zinc-400">HKD</span>
                 </div>
               </div>
             </div>

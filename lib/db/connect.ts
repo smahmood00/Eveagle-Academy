@@ -31,12 +31,12 @@ if (!cached) {
 export async function connectToDB() {
   if (!cached) {
     cached = global.mongoose = { isConnected: false };
-  }
+    }
 
   if (cached.isConnected) {
-    console.log('Using existing MongoDB connection');
-    return;
-  }
+      console.log('Using existing MongoDB connection');
+      return;
+    }
 
   try {
     await mongoose.connect(MONGODB_URI_SAFE);

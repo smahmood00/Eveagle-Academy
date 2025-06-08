@@ -1,4 +1,4 @@
-import { Schema, model, models, Document } from "mongoose";
+import { Schema, model, models, Document, Model, Types } from "mongoose";
 
 // TypeScript Interfaces
 export interface ILesson {
@@ -15,6 +15,7 @@ interface IOverviewMedia {
 }
 
 export interface ICourse extends Document {
+  _id: Types.ObjectId;
   courseId: string;
   price: number;
   ageGroup: string;
@@ -89,11 +90,5 @@ courseSchema.pre('save', function(next) {
 });
 
 // Export the model
-let Course;
-try {
-  Course = models.Course || model<ICourse>('Course', courseSchema);
-} catch {
-  Course = model<ICourse>('Course', courseSchema);
-}
-
+const Course: Model<ICourse> = models.Course || model<ICourse>('Course', courseSchema);
 export default Course; 

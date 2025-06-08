@@ -119,7 +119,7 @@ export default async function CourseDetailPage(
                     href={`/checkout/${course.slug}`}
                     className="block w-full py-4 px-6 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-xl font-medium transition-all duration-300 hover:scale-[1.02] text-lg text-center"
                   >
-                    Enroll Now - ${course.price} USD
+                    Enroll Now - HKD {course.price} 
                   </Link>
                 </div>
               </div>
@@ -197,7 +197,7 @@ export default async function CourseDetailPage(
                 href={`/checkout/${course.slug}`}
                 className="block w-full py-4 px-6 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-xl font-medium transition-all duration-300 hover:scale-[1.02] text-lg text-center"
               >
-                Enroll Now - ${course.price} USD
+                Enroll Now - HKD {course.price}
               </Link>
             </div>
           </div>

@@ -57,21 +57,24 @@ export function FloatingNav() {
     try {
       setIsLoading(true)
       
+      // Clear local storage
       localStorage.removeItem('authToken')
       localStorage.removeItem('userEmail')
+      
+      // Update auth context
       logout()
 
+      // Call logout API
       await axios.post('/api/auth/logout', {}, {
         withCredentials: true
       })
 
+      // Redirect to home page
       router.replace('/')
       
-      setTimeout(() => {
-        window.location.reload()
-      }, 100)
     } catch (error) {
       console.error('Logout error:', error)
+      // Still redirect to home page even if there's an error
       router.replace('/')
     } finally {
       setIsLoading(false)
