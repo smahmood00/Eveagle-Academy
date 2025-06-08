@@ -83,7 +83,7 @@ export function FloatingNav() {
   return (
     <>
       <motion.div
-        className={`fixed top-0 inset-x-2 sm:top-6 sm:inset-x-auto sm:left-1/2 sm:-translate-x-1/2 z-50 ${
+        className={`fixed top-4 inset-x-2 sm:top-6 sm:inset-x-auto sm:left-1/2 sm:-translate-x-1/2 z-50 ${
           isVisible ? "opacity-100" : "opacity-0 pointer-events-none"
         }`}
         initial={{ y: -100 }}

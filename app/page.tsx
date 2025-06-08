@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { ArrowRight, Github, Linkedin, Mail, Twitter, Facebook, MapPin } from "lucide-react"
+import { ArrowRight, Github, Linkedin, Mail, Twitter, Facebook, MapPin, Book, Wrench } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { ProjectCard } from "@/components/project-card"
@@ -237,59 +237,71 @@ export default async function Portfolio() {
         </div>
       </section>
 
-      {/* Contact Section */}
-      <section id="contact" className="py-32 relative">
+      {/* Call to Action Section */}
+      <section id="cta" className="py-32 relative">
         <div className="absolute inset-0 z-0">
           <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-pink-500 rounded-full mix-blend-multiply filter blur-3xl opacity-10"></div>
           <div className="absolute bottom-1/3 right-1/3 w-64 h-64 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-10"></div>
         </div>
 
         <div className="container relative z-10">
-          <SectionHeading title="Get In Touch" subtitle="Let's work together" />
+          <div className="max-w-4xl mx-auto text-center">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text text-transparent">
+              Ready to Begin Your Tech Journey?
+            </h2>
+            <p className="text-xl text-zinc-400 mb-12 max-w-2xl mx-auto">
+              Join Eveagle Academy and give your child the skills they need to thrive in the digital age. Our expert-led courses make learning technology fun and engaging.
+            </p>
+            
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <Button 
+                className="w-full sm:w-auto px-8 py-6 text-lg bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 border-0 relative overflow-hidden group"
+                asChild
+              >
+                <Link href="/summer-courses">
+                  <span className="relative z-10 flex items-center">
+                    Explore Summer Courses <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
+                  </span>
+                  <span className="absolute inset-0 bg-gradient-to-r from-pink-500 to-purple-500 opacity-0 group-hover:opacity-100 transition-opacity"></span>
+                </Link>
+              </Button>
+              
+              <Button 
+                variant="outline" 
+                className="w-full sm:w-auto px-8 py-6 text-lg border-zinc-700 text-zinc-300 hover:text-white hover:border-zinc-500"
+                asChild
+              >
+                <Link href="#contact">
+                  Contact Us
+                </Link>
+              </Button>
+            </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center mt-16">
-            <GlassmorphicCard>
-              <h3 className="text-2xl font-bold mb-6">Contact Information</h3>
-              <div className="space-y-6">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-full bg-zinc-800 flex items-center justify-center">
-                    <Mail className="h-5 w-5 text-purple-400" />
-                  </div>
-                  <div>
-                    <div className="text-sm text-zinc-500">Email</div>
-                    <div className="font-medium">hello@example.com</div>
-                  </div>
+            <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div className="p-6 rounded-2xl bg-zinc-900/50 backdrop-blur-sm border border-purple-500/20">
+                <div className="w-12 h-12 rounded-full bg-purple-500/20 flex items-center justify-center mb-4 mx-auto">
+                  <Book className="h-6 w-6 text-purple-400" />
                 </div>
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-full bg-zinc-800 flex items-center justify-center">
-                    <Linkedin className="h-5 w-5 text-purple-400" />
-                  </div>
-                  <div>
-                    <div className="text-sm text-zinc-500">LinkedIn</div>
-                    <div className="font-medium">linkedin.com/in/shinekyawkyawaung</div>
-                  </div>
-                </div>
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-full bg-zinc-800 flex items-center justify-center">
-                    <Github className="h-5 w-5 text-purple-400" />
-                  </div>
-                  <div>
-                    <div className="text-sm text-zinc-500">GitHub</div>
-                    <div className="font-medium">github.com/shinekyawkyawaung</div>
-                  </div>
-                </div>
+                <h3 className="text-xl font-semibold mb-2">Expert Instructors</h3>
+                <p className="text-zinc-400">Learn from industry professionals who are passionate about teaching.</p>
               </div>
 
-              <div className="mt-8 pt-8 border-t border-zinc-800">
-                <h4 className="text-lg font-medium mb-4">Current Status</h4>
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full bg-green-500 animate-pulse"></div>
-                  <span>Available for freelance work and full-time opportunities</span>
+              <div className="p-6 rounded-2xl bg-zinc-900/50 backdrop-blur-sm border border-purple-500/20">
+                <div className="w-12 h-12 rounded-full bg-purple-500/20 flex items-center justify-center mb-4 mx-auto">
+                  <Wrench className="h-6 w-6 text-purple-400" />
                 </div>
+                <h3 className="text-xl font-semibold mb-2">Hands-on Projects</h3>
+                <p className="text-zinc-400">Build real projects that showcase your child's skills and creativity.</p>
               </div>
-            </GlassmorphicCard>
 
-            <ContactForm />
+              <div className="p-6 rounded-2xl bg-zinc-900/50 backdrop-blur-sm border border-purple-500/20">
+                <div className="w-12 h-12 rounded-full bg-purple-500/20 flex items-center justify-center mb-4 mx-auto">
+                  <MapPin className="h-6 w-6 text-purple-400" />
+                </div>
+                <h3 className="text-xl font-semibold mb-2">Flexible Learning</h3>
+                <p className="text-zinc-400">Online classes to fit your schedule.</p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
