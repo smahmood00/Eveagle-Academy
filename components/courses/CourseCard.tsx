@@ -6,7 +6,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { ICourse } from "@/lib/db/models/course";
 import { useEffect, useState, useRef } from "react";
-import { useMobile } from "@/hooks/use-mobile";
 
 interface CourseCardProps {
   course: Partial<ICourse>;
@@ -23,12 +22,11 @@ export function CourseCard({
 }: CourseCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const previousActive = useRef(active);
-  const isMobile = useMobile();
 
   const position = index - active;
   const scale = 1;
-  const rotate = isMobile ? 0 : position * 5;
-  const translateX = isMobile ? position * 320 : position * 360;
+  const rotate = position * 5;
+  const translateX = position * 360;
   const opacity = isCenter ? 1 : 0.7;
 
   // Reset expanded state when active card changes
@@ -55,7 +53,7 @@ export function CourseCard({
         left: '50%',
         transformStyle: "preserve-3d",
         transformOrigin: "center",
-        perspective: isMobile ? "none" : "1000px",
+        perspective: "1000px",
       }}
       animate={{
         x: translateX - 160,
@@ -97,7 +95,7 @@ export function CourseCard({
         {/* Content Section */}
         <div className="p-6">
           {/* Badges Row 1 */}
-          <div className="flex flex-wrap gap-2 mb-2">
+          <div className="flex gap-2 mb-2">
             <span className="px-3 py-1 rounded-full bg-purple-500/20 border border-purple-500/30 text-purple-300 text-xs">
               {course.ageGroup}
             </span>
@@ -107,7 +105,7 @@ export function CourseCard({
           </div>
 
           {/* Badges Row 2 */}
-          <div className="flex flex-wrap gap-2 mb-4">
+          <div className="flex gap-2 mb-4">
             <span className="flex items-center gap-1 px-3 py-1 rounded-full bg-blue-500/20 border border-blue-500/30 text-blue-300 text-xs">
               <Book className="w-3 h-3" />
               {course.totalClasses} Classes

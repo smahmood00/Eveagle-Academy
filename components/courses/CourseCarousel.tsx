@@ -70,31 +70,31 @@ export function CourseCarousel({ courses }: CourseCarouselProps) {
 
   return (
     <div 
-      className={`relative ${isMobile ? 'h-[550px]' : 'h-[750px]'} w-full overflow-hidden`}
+      className="relative h-[750px] w-full overflow-hidden"
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
     >
       {/* Cards Container */}
       <div className="absolute inset-0 flex items-start justify-center">
-        <div className={`relative ${isMobile ? 'w-[320px]' : 'w-[960px]'} h-[650px]`}>
+        <div className="relative w-[320px] sm:w-[960px] h-[650px]">
           {/* Navigation Arrows - Positioned on sides */}
-          <div className={`absolute left-0 right-0 top-[300px] ${isMobile ? '-mx-4' : '-mx-20'} flex justify-between items-center z-20 pointer-events-none`}>
+          <div className="absolute left-0 right-0 top-[300px] -mx-9 sm:-mx-32 flex justify-between items-center z-20 pointer-events-none">
             <Button
               variant="ghost"
               size="icon"
-              className={`${isMobile ? 'h-10 w-10' : 'h-14 w-14'} rounded-full bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 transition-colors pointer-events-auto`}
+              className="h-12 w-12 sm:h-14 sm:w-14 rounded-full bg-zinc-900/80 backdrop-blur-sm border border-white/20 hover:bg-white/20 transition-colors pointer-events-auto"
               onClick={prev}
             >
-              <ChevronLeft className={`${isMobile ? 'h-6 w-6' : 'h-8 w-8'}`} />
+              <ChevronLeft className="h-6 w-6 sm:h-8 sm:w-8" />
             </Button>
             <Button
               variant="ghost"
               size="icon"
-              className={`${isMobile ? 'h-10 w-10' : 'h-14 w-14'} rounded-full bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 transition-colors pointer-events-auto`}
+              className="h-12 w-12 sm:h-14 sm:w-14 rounded-full bg-zinc-900/80 backdrop-blur-sm border border-white/20 hover:bg-white/20 transition-colors pointer-events-auto"
               onClick={next}
             >
-              <ChevronRight className={`${isMobile ? 'h-6 w-6' : 'h-8 w-8'}`} />
+              <ChevronRight className="h-6 w-6 sm:h-8 sm:w-8" />
             </Button>
           </div>
 
@@ -111,8 +111,8 @@ export function CourseCarousel({ courses }: CourseCarouselProps) {
       </div>
 
       {/* Dots Navigation */}
-      <div className="absolute bottom-2 left-0 right-0 flex justify-center">
-        <div className="flex gap-2">
+      <div className="absolute bottom-12 sm:bottom-2 left-0 right-0 flex justify-center z-30">
+        <div className="flex gap-2 p-2 rounded-full bg-zinc-900/50 backdrop-blur-sm">
           {courses.map((_, index) => (
             <button
               key={index}
