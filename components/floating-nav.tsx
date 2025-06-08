@@ -41,7 +41,6 @@ export function FloatingNav() {
   ]
 
   const navItems = [
-    { name: "Courses", href: "/courses", submenu: courseItems },
     { name: "Summer Courses!", href: "/summer-courses", highlight: true },
     { name: "About Us", href: "/about" },
     { name: "Blog", href: "/blog" },
@@ -84,7 +83,7 @@ export function FloatingNav() {
   return (
     <>
       <motion.div
-        className={`fixed top-6 inset-x-2 sm:top-6 sm:inset-x-auto sm:left-1/2 sm:-translate-x-1/2 z-50 ${
+        className={`fixed top-0 inset-x-2 sm:top-6 sm:inset-x-auto sm:left-1/2 sm:-translate-x-1/2 z-50 ${
           isVisible ? "opacity-100" : "opacity-0 pointer-events-none"
         }`}
         initial={{ y: -100 }}
@@ -96,7 +95,7 @@ export function FloatingNav() {
 
           {isMobile ? (
             <div className="relative flex items-center justify-between">
-              <Link href="/" className="font-bold text-base">
+              <Link href="/" className="font-bold text-base" onClick={handleNavClick}>
                 <span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600">Eveagle</span>
                 <span className="text-white">Academy</span>
               </Link>
@@ -111,42 +110,25 @@ export function FloatingNav() {
             </div>
           ) : (
             <div className="relative flex items-center gap-1">
-              <Link href="/" className="font-bold text-lg mr-4">
+              <Link href="/" className="font-bold text-lg mr-4" onClick={handleNavClick}>
                 <span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600">Eveagle</span>
                 <span className="text-white">Academy</span>
               </Link>
 
               {/* Desktop Nav Items */}
               {navItems.map((item) => (
-                <div key={item.name} className="relative group">
-                  <Link
-                    href={item.href}
-                    className={`px-3 py-1 text-sm font-medium transition-colors ${
-                      item.highlight
-                        ? "text-pink-400 hover:text-pink-300"
-                        : "text-zinc-400 hover:text-white"
-                    }`}
-                    onClick={handleNavClick}
-                  >
-                    {item.name}
-                  </Link>
-                  {item.submenu && (
-                    <div className="absolute left-0 top-full mt-2 w-48 rounded-md bg-zinc-800/90 backdrop-blur-md border border-zinc-700/50 shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
-                      <div className="py-2">
-                        {item.submenu.map((subitem) => (
-                          <Link
-                            key={subitem.name}
-                            href={subitem.href}
-                            className="block px-4 py-2 text-sm text-zinc-400 hover:text-white hover:bg-zinc-700/50 transition-colors"
-                            onClick={handleNavClick}
-                          >
-                            {subitem.name}
-                          </Link>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  className={`px-3 py-1 text-sm font-medium transition-colors ${
+                    item.highlight
+                      ? "text-pink-400 hover:text-pink-300"
+                      : "text-zinc-400 hover:text-white"
+                  }`}
+                  onClick={handleNavClick}
+                >
+                  {item.name}
+                </Link>
               ))}
 
               {isAuthenticated ? (
@@ -199,20 +181,6 @@ export function FloatingNav() {
                   >
                     {item.name}
                   </Link>
-                  {item.submenu && (
-                    <div className="ml-4 mt-1 space-y-1 border-l border-zinc-800 pl-4">
-                      {item.submenu.map((subitem) => (
-                        <Link
-                          key={subitem.name}
-                          href={subitem.href}
-                          className="block py-2 px-4 text-base text-zinc-400 hover:text-white hover:bg-zinc-800/50 rounded-lg transition-colors"
-                          onClick={handleNavClick}
-                        >
-                          {subitem.name}
-                        </Link>
-                      ))}
-                    </div>
-                  )}
                 </div>
               ))}
             </div>
