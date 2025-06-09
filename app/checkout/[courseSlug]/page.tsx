@@ -128,10 +128,13 @@ export default function CheckoutPage({ params }: Props) {
 
   if (loading || !course) {
     return (
-      <main className="min-h-screen bg-gradient-to-b from-zinc-900 to-black text-white pb-20">
-        <div className="container px-4 mx-auto py-12">
+      <main className="min-h-screen bg-gradient-to-b from-zinc-900 to-black text-white pt-24 sm:pt-28 pb-20">
+        <div className="container px-4 sm:px-6">
           <div className="max-w-4xl mx-auto text-center">
-            Loading...
+            <div className="animate-pulse space-y-4">
+              <div className="h-8 bg-purple-500/20 rounded w-1/3 mx-auto"></div>
+              <div className="h-4 bg-zinc-800 rounded w-2/3 mx-auto"></div>
+            </div>
           </div>
         </div>
       </main>
@@ -346,18 +349,13 @@ export default function CheckoutPage({ params }: Props) {
   };
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-zinc-900 to-black text-white pb-20">
-      <div className="container px-4 mx-auto py-12">
+    <main className="min-h-screen bg-gradient-to-b from-zinc-900 to-black text-white pt-24 sm:pt-28 pb-20">
+      <div className="container px-4 sm:px-6">
         <div className="max-w-4xl mx-auto">
-          <h1 className="text-3xl md:text-4xl font-bold mb-8 bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">
-            Checkout Summary
-          </h1>
-
-          {/* Course Summary Card */}
-          <div className="bg-zinc-900/50 rounded-2xl p-6 border border-purple-500/20 mb-8">
-            <div className="flex gap-6">
-              {/* Course Image */}
-              <div className="relative w-40 h-40 rounded-xl overflow-hidden flex-shrink-0 hidden md:block">
+          {/* Course Info */}
+          <div className="bg-zinc-900/50 rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-purple-500/20 mb-6 sm:mb-8">
+            <div className="grid sm:grid-cols-2 gap-4 sm:gap-6">
+              <div className="relative aspect-video sm:aspect-square rounded-lg sm:rounded-xl overflow-hidden">
                 <Image
                   src={course.cardImage || '/placeholder-course.jpg'}
                   alt={course.title}
@@ -365,49 +363,42 @@ export default function CheckoutPage({ params }: Props) {
                   className="object-cover"
                 />
               </div>
-
-              {/* Course Details */}
-              <div className="flex-1">
-                <h2 className="text-2xl font-semibold mb-2">{course.title}</h2>
-                <p className="text-zinc-400 mb-4 line-clamp-2">{course.overviewDescription}</p>
+              
+              <div className="space-y-4">
+                <h1 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">
+                  {course.title}
+                </h1>
                 
-                {/* Course Stats */}
-                <div className="flex flex-wrap gap-4 mb-4">
-                  <div className="flex items-center gap-2">
-                    <Clock className="w-4 h-4 text-purple-400" />
-                    <span className="text-sm text-zinc-300">{course.totalHours} Hours</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Book className="w-4 h-4 text-purple-400" />
-                    <span className="text-sm text-zinc-300">{course.totalClasses} Classes</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Wrench className="w-4 h-4 text-purple-400" />
-                    <span className="text-sm text-zinc-300">{course.toolUsed}</span>
-                  </div>
+                <div className="flex flex-wrap gap-2 sm:gap-3">
+                  <span className="flex items-center gap-1 px-2.5 sm:px-3 py-1 rounded-full bg-purple-500/20 border border-purple-500/30 text-purple-300 text-xs sm:text-sm">
+                    <Clock className="w-3 h-3 sm:w-4 sm:h-4" />
+                    {course.totalHours} Hours
+                  </span>
+                  <span className="flex items-center gap-1 px-2.5 sm:px-3 py-1 rounded-full bg-blue-500/20 border border-blue-500/30 text-blue-300 text-xs sm:text-sm">
+                    <Book className="w-3 h-3 sm:w-4 sm:h-4" />
+                    {course.totalClasses} Classes
+                  </span>
+                  <span className="flex items-center gap-1 px-2.5 sm:px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 text-xs sm:text-sm">
+                    <Wrench className="w-3 h-3 sm:w-4 sm:h-4" />
+                    {course.toolUsed}
+                  </span>
                 </div>
 
-                {/* Price */}
-                <div className="flex items-baseline gap-2">
-                  <span className="text-2xl font-bold text-purple-300">${course.price}</span>
-                  <span className="text-zinc-400">HKD</span>
+                <div className="pt-2 sm:pt-4">
+                  <div className="text-2xl sm:text-3xl font-bold text-white">
+                    HKD {course.price}
+                  </div>
+                  <p className="text-xs sm:text-sm text-zinc-400 mt-1">
+                    One-time payment • Lifetime access
+                  </p>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Login/Purchase Flow Section */}
-          <div className="bg-zinc-900/50 rounded-2xl p-8 border border-purple-500/20">
-            {isAuthenticated && userEmail && (
-              <div className="space-y-6">
-                <div className="flex items-center gap-3 mb-6">
-                  <User className="w-5 h-5 text-purple-400" />
-                  <span className="text-zinc-300">Logged in as: <span className="text-purple-300">{userEmail}</span></span>
-                </div>
-                {renderStep()}
-              </div>
-            )}
-            {!isAuthenticated && renderStep()}
+          {/* Checkout Steps */}
+          <div className="bg-zinc-900/50 rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-purple-500/20">
+            {renderStep()}
           </div>
         </div>
       </div>

@@ -10,9 +10,10 @@ import { Enrollment, IEnrollment } from '@/lib/db/models/enrollment';
 // This is your Stripe CLI webhook secret for testing your endpoint locally
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
 
+// This is needed to disable body parsing, as we need the raw body for Stripe signature verification
 export const config = {
   api: {
-    bodyParser: false, // Don't parse the body, we need it raw for signature verification
+    bodyParser: false,
   },
 };
 
@@ -30,22 +31,31 @@ export async function OPTIONS() {
 
 export async function POST(request: Request) {
   try {
-    const body = await request.text();
+    // Get the raw request body as a buffer
+    const rawBody = await request.arrayBuffer();
+    const body = Buffer.from(rawBody); // pass Buffer directly
+
+    // Get the Stripe signature from headers
     const signature = request.headers.get('stripe-signature');
 
     if (!signature) {
-      console.error('⚠️ No stripe signature found in request');
-      return NextResponse.json({ error: 'No signature found in request' }, { status: 400 });
+      console.error('⚠️ No stripe signature found in request headers');
+      return NextResponse.json(
+        { error: 'No stripe signature found in request headers' },
+        { status: 400 }
+      );
     }
 
     let event: Stripe.Event;
+
     try {
+      // Construct and verify the event
       event = stripe.webhooks.constructEvent(
         body,
         signature,
         webhookSecret
       );
-      console.log('✅ Webhook signature verified');
+      console.log('✅ Webhook signature verified successfully');
     } catch (err: any) {
       console.error('⚠️ Webhook signature verification failed:', err.message);
       return NextResponse.json(
