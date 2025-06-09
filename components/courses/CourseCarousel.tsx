@@ -110,7 +110,7 @@ export function CourseCarousel({ courses }: CourseCarouselProps) {
         </div>
       </div>
 
-      {/* Dots Navigation */}
+      {/* Dots Navigation
       <div className="absolute bottom-12 sm:bottom-2 left-0 right-0 flex justify-center z-30">
         <div className="flex gap-2 p-2 rounded-full bg-zinc-900/50 backdrop-blur-sm">
           {courses.map((_, index) => (
@@ -125,7 +125,7 @@ export function CourseCarousel({ courses }: CourseCarouselProps) {
             />
           ))}
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }

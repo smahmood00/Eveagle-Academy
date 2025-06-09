@@ -104,7 +104,7 @@ export default async function Portfolio() {
         </div>
 
         <div className="container relative z-10">
-          <SectionHeading title="Learn the Hot Skills of Today" subtitle="Prompt Engineering" />
+          <SectionHeading title="Learn The Hot Skills Of Today" subtitle="Prompt Engineering" />
           
           <div className="mt-16 h-[200px] sm:h-[400px] md:h-[450px] relative w-full max-w-4xl mx-auto">
             <PromptingIsAllYouNeed />

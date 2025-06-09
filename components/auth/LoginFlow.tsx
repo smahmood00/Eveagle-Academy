@@ -233,7 +233,7 @@ export function LoginFlow({
                     <Input 
                       id="email-input" 
                       type="email" 
-                      placeholder="parent@example.com" 
+                      placeholder="taiman@example.com" 
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       disabled={isLoading}
