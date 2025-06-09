@@ -44,6 +44,7 @@ export function FloatingNav() {
     { name: "Summer Courses!", href: "/summer-courses", highlight: true },
     { name: "About Us", href: "/about" },
     { name: "Blog", href: "/blog" },
+    ...(isAuthenticated ? [{ name: "Dashboard", href: "/dashboard" }] : []),
   ]
 
   const handleNavClick = () => {
@@ -83,7 +84,7 @@ export function FloatingNav() {
   return (
     <>
       <motion.div
-        className={`fixed top-4 inset-x-2 sm:top-6 sm:inset-x-auto sm:left-1/2 sm:-translate-x-1/2 z-50 ${
+        className={`fixed top-4 inset-x-2 sm:top-6 sm:inset-x-auto sm:left-1/2 sm:-translate-x-1/2 z-[100] ${
           isVisible ? "opacity-100" : "opacity-0 pointer-events-none"
         }`}
         initial={{ y: -100 }}
@@ -159,7 +160,7 @@ export function FloatingNav() {
       {/* Mobile menu */}
       {isMobile && (
         <motion.div
-          className={`fixed inset-x-2 top-24 bottom-4 z-40 rounded-2xl bg-zinc-900/95 backdrop-blur-md border border-zinc-800/50 ${
+          className={`fixed inset-x-2 top-24 bottom-4 z-[90] rounded-2xl bg-zinc-900/95 backdrop-blur-md border border-zinc-800/50 ${
             isOpen ? "block" : "hidden"
           }`}
           initial={{ opacity: 0, y: -20 }}
