@@ -7,7 +7,14 @@ import Stripe from 'stripe';
 import { Payment, IPayment } from '@/lib/db/models/payment';
 import { Enrollment, IEnrollment } from '@/lib/db/models/enrollment';
 
+// This is your Stripe CLI webhook secret for testing your endpoint locally
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
+
+export const config = {
+  api: {
+    bodyParser: false, // Don't parse the body, we need it raw for signature verification
+  },
+};
 
 // Handle CORS preflight requests
 export async function OPTIONS() {
@@ -27,15 +34,24 @@ export async function POST(request: Request) {
     const signature = request.headers.get('stripe-signature');
 
     if (!signature) {
+      console.error('⚠️ No stripe signature found in request');
       return NextResponse.json({ error: 'No signature found in request' }, { status: 400 });
     }
 
     let event: Stripe.Event;
     try {
-      event = stripe.webhooks.constructEvent(body, signature, webhookSecret);
+      event = stripe.webhooks.constructEvent(
+        body,
+        signature,
+        webhookSecret
+      );
+      console.log('✅ Webhook signature verified');
     } catch (err: any) {
       console.error('⚠️ Webhook signature verification failed:', err.message);
-      return NextResponse.json({ error: `Webhook signature verification failed: ${err.message}` }, { status: 400 });
+      return NextResponse.json(
+        { error: `Webhook signature verification failed: ${err.message}` },
+        { status: 400 }
+      );
     }
 
     // Handle the event
@@ -67,8 +83,6 @@ export async function POST(request: Request) {
         const payment = await Payment.findOne({ stripeSessionId: session.id }) as IPayment | null;
 
         if (!payment) {
-          console.error('Payment record not found for session:', session.id);
-          // Create a new payment record if not found
           console.log('Creating new payment record...');
           await Payment.create({
             userId: new Types.ObjectId(userId),
@@ -80,13 +94,13 @@ export async function POST(request: Request) {
             paymentMethod: 'credit',
             completedAt: new Date()
           });
-          console.log('New payment record created');
+          console.log('✅ New payment record created');
         } else {
           console.log('Updating existing payment record...');
           payment.status = 'completed';
           payment.completedAt = new Date();
           await payment.save();
-          console.log('Payment record updated');
+          console.log('✅ Payment record updated');
         }
 
         // Check if enrollment already exists
@@ -108,18 +122,22 @@ export async function POST(request: Request) {
           enrollmentDate: new Date()
         });
 
-        console.log('Enrollment created successfully:', newEnrollment);
+        console.log('✅ Enrollment created successfully:', newEnrollment);
+        return NextResponse.json({ received: true });
       } catch (dbError: any) {
         console.error('⚠️ Database operation failed:', dbError.message);
+        // Still return 200 to acknowledge receipt
         return NextResponse.json({ received: true });
       }
-
-      return NextResponse.json({ received: true });
     }
 
+    // Return a 200 response for other event types
     return NextResponse.json({ received: true });
   } catch (error: any) {
     console.error('⚠️ Webhook error:', error.message);
-    return NextResponse.json({ received: true });
+    return NextResponse.json(
+      { error: 'Webhook handler failed' },
+      { status: 500 }
+    );
   }
 } 
