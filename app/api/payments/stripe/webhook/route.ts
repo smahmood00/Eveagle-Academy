@@ -31,14 +31,11 @@ export async function OPTIONS() {
 
 export async function POST(request: Request) {
   try {
-    // Get the raw request body as a buffer
-    const rawBody = await request.arrayBuffer();
-    const body = Buffer.from(rawBody); // pass Buffer directly
-
-    // Get the Stripe signature from headers
-    const signature = request.headers.get('stripe-signature');
-
-    if (!signature) {
+    // Get the raw request body as text
+    const text = await request.text();
+    const sig = request.headers.get('stripe-signature');
+    console.log('sig', sig);
+    if (!sig) {
       console.error('⚠️ No stripe signature found in request headers');
       return NextResponse.json(
         { error: 'No stripe signature found in request headers' },
@@ -49,12 +46,8 @@ export async function POST(request: Request) {
     let event: Stripe.Event;
 
     try {
-      // Construct and verify the event
-      event = stripe.webhooks.constructEvent(
-        body,
-        signature,
-        webhookSecret
-      );
+      // Construct and verify the event using the raw body text
+      event = stripe.webhooks.constructEvent(text, sig, webhookSecret);
       console.log('✅ Webhook signature verified successfully');
     } catch (err: any) {
       console.error('⚠️ Webhook signature verification failed:', err.message);
