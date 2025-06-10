@@ -2,7 +2,7 @@ import { Schema, model, models, Document, Types } from 'mongoose';
 
 export interface IEnrollment extends Document {
   studentId: Types.ObjectId;
-  studentType: 'student' | 'parent';
+  studentType: 'user' | 'child';
   courseId: Types.ObjectId;
   status: 'active' | 'completed' | 'dropped';
   enrollmentDate: Date;
@@ -14,7 +14,7 @@ const EnrollmentSchema = new Schema<IEnrollment>({
   studentId: {
     type: Schema.Types.ObjectId,
     required: true,
-    ref: 'Student'
+    refPath: 'studentType'
   },
   courseId: {
     type: Schema.Types.ObjectId,
@@ -24,7 +24,7 @@ const EnrollmentSchema = new Schema<IEnrollment>({
   studentType: {
     type: String,
     required: true,
-    enum: ['student', 'parent']
+    enum: ['user', 'child']
   },
   status: {
     type: String,

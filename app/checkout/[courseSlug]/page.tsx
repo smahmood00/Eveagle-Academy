@@ -31,7 +31,7 @@ export default function CheckoutPage({ params }: Props) {
   const [paymentLoading, setPaymentLoading] = useState(false);
   const [paymentError, setPaymentError] = useState<string>('');
   const router = useRouter();
-  const { isAuthenticated, userEmail } = useAuth();
+  const { isAuthenticated, userEmail, userId } = useAuth();
 
   useEffect(() => {
     async function loadCourse() {
@@ -105,7 +105,7 @@ export default function CheckoutPage({ params }: Props) {
         const response = await axios.post('/api/payments/stripe/create-session', {
           courseSlug: params.courseSlug,
           purchaseType: selectedChild ? 'child' : 'myself',
-          studentId: selectedChild ? selectedChild._id : userEmail,
+          studentId: selectedChild ? selectedChild._id : userId,
         });
 
         // Redirect to Stripe checkout
@@ -115,7 +115,7 @@ export default function CheckoutPage({ params }: Props) {
         console.log('FPS payment selected', {
           courseSlug: params.courseSlug,
           purchaseType: selectedChild ? 'child' : 'myself',
-          studentId: selectedChild ? selectedChild._id : userEmail,
+          studentId: selectedChild ? selectedChild._id : userId,
         });
       }
     } catch (err: any) {

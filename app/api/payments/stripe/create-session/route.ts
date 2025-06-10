@@ -38,7 +38,7 @@ export async function POST(request: Request) {
       courseTitle: course.title,
       price: course.price,
       userId,
-      studentType: purchaseType === 'myself' ? 'User' : 'Child',
+      studentType: purchaseType,
       studentId: studentId,
       successUrl,
       cancelUrl,

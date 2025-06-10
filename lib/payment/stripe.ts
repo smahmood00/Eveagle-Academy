@@ -25,7 +25,7 @@ export async function createStripeSession({
   courseTitle: string;
   price: number;
   userId: string;
-  studentType: 'User' | 'Child';
+  studentType: 'myself' | 'child';
   studentId: string;
   successUrl: string;
   cancelUrl: string;

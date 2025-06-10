@@ -3,6 +3,7 @@ import { verifyAuth } from '@/lib/auth/verify';
 import { connectToDB } from '@/lib/db/connect';
 import { Enrollment } from '@/lib/db/models/enrollment';
 import { Types } from 'mongoose';
+import { User } from '@/lib/db/models/user';
 
 export async function GET(request: Request) {
   try {
@@ -16,14 +17,14 @@ export async function GET(request: Request) {
     // Get all enrollments for the user and their children
     const enrollments = await Enrollment.find({
       $or: [
-        { studentId: new Types.ObjectId(userId), studentType: 'User' },
-        { studentId: { $in: await getChildrenIds(userId) }, studentType: 'Child' }
+        { studentId: new Types.ObjectId(userId), studentType: 'user' },
+        { studentId: { $in: await getChildrenIds(userId) }, studentType: 'child' }
       ]
     }).populate('courseId');
 
     // Separate enrollments by type
-    const myCourses = enrollments.filter(e => e.studentType === 'User');
-    const childrenCourses = enrollments.filter(e => e.studentType === 'Child');
+    const myCourses = enrollments.filter(e => e.studentType === 'user');
+    const childrenCourses = enrollments.filter(e => e.studentType === 'child');
 
     return NextResponse.json({
       myCourses,
@@ -38,9 +39,8 @@ export async function GET(request: Request) {
   }
 }
 
+// Helper function to get children IDs for a user
 async function getChildrenIds(userId: string) {
-  // Import Child model here to avoid circular dependencies
-  const { Child } = await import('@/lib/db/models/child');
-  const children = await Child.find({ parent: new Types.ObjectId(userId) });
-  return children.map(child => child._id);
+  const user = await User.findById(userId);
+  return user?.children || [];
 } 

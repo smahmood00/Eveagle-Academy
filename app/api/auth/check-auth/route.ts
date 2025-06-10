@@ -12,22 +12,29 @@ export async function GET(request: Request) {
     if (!token) {
       return NextResponse.json({
         isAuthenticated: false,
-        email: null
+        email: null,
+        userId: null,
+        message: 'No token found'
       });
     }
 
     // Verify the token
     const payload = verifyToken(token);
     
+    // Since we've updated JWTPayload to require userId, if we get here we know we have a valid user
     return NextResponse.json({
       isAuthenticated: true,
-      email: payload.email
+      email: payload.email,
+      userId: payload.userId
     });
 
   } catch (error) {
+    // Token verification failed
     return NextResponse.json({
       isAuthenticated: false,
-      email: null
+      email: null,
+      userId: null,
+      message: 'Invalid token'
     });
   }
 } 

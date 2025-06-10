@@ -4,7 +4,7 @@ import { cookies } from 'next/headers';
 const JWT_SECRET = process.env.JWT_SECRET!;
 
 export interface JWTPayload {
-  userId: string | null;
+  userId: string;
   email: string;
 }
 

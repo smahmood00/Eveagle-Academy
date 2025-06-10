@@ -15,6 +15,7 @@ export const config = {
   api: {
     bodyParser: false,
   },
+  runtime: 'edge'
 };
 
 // Handle CORS preflight requests
@@ -31,10 +32,10 @@ export async function OPTIONS() {
 
 export async function POST(request: Request) {
   try {
-    // Get the raw request body as text
+    // Get the raw request body
     const text = await request.text();
     const sig = request.headers.get('stripe-signature');
-    console.log('sig', sig);
+
     if (!sig) {
       console.error('⚠️ No stripe signature found in request headers');
       return NextResponse.json(
@@ -46,7 +47,7 @@ export async function POST(request: Request) {
     let event: Stripe.Event;
 
     try {
-      // Construct and verify the event using the raw body text
+      // Construct and verify the event
       event = stripe.webhooks.constructEvent(text, sig, webhookSecret);
       console.log('✅ Webhook signature verified successfully');
     } catch (err: any) {
@@ -116,10 +117,16 @@ export async function POST(request: Request) {
           console.log('Enrollment already exists');
           return NextResponse.json({ received: true });
         }
+        console.log('Creating new enrollment...');
 
+        // Convert studentType to match enum values exactly
+        const enrollmentStudentType = studentType.toLowerCase() === 'myself' ? 'user' : 'child';
+        console.log('Creating enrollment with studentType:', enrollmentStudentType, typeof enrollmentStudentType);
+
+        // Create new enrollment
         const newEnrollment = await Enrollment.create({
           studentId: new Types.ObjectId(studentId),
-          studentType,
+          studentType: enrollmentStudentType,
           courseId: new Types.ObjectId(courseId),
           status: 'active',
           enrollmentDate: new Date()

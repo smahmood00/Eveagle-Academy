@@ -6,6 +6,7 @@ import axios from 'axios';
 interface AuthContextType {
   isAuthenticated: boolean;
   userEmail: string | null;
+  userId: string | null;
   login: (email: string, token: string) => void;
   logout: () => void;
   isLoading: boolean;
@@ -16,6 +17,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userEmail, setUserEmail] = useState<string | null>(null);
+  const [userId, setUserId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   // Check authentication status on mount and after window focus
@@ -24,9 +26,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const response = await axios.get('/api/auth/check-auth', { withCredentials: true });
       setIsAuthenticated(response.data.isAuthenticated);
       setUserEmail(response.data.email);
+      setUserId(response.data.userId);
     } catch (error) {
       setIsAuthenticated(false);
       setUserEmail(null);
+      setUserId(null);
     } finally {
       setIsLoading(false);
     }
@@ -43,11 +47,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const login = (email: string, token: string) => {
     setIsAuthenticated(true);
     setUserEmail(email);
+    // We'll get the userId from the next auth check
   };
 
   const logout = () => {
     setIsAuthenticated(false);
     setUserEmail(null);
+    setUserId(null);
   };
 
   if (isLoading) {
@@ -59,7 +65,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, userEmail, login, logout, isLoading }}>
+    <AuthContext.Provider value={{ isAuthenticated, userEmail, userId, login, logout, isLoading }}>
       {children}
     </AuthContext.Provider>
   );

@@ -28,27 +28,28 @@ export async function POST(request: Request) {
     }
 
     const user = await User.findOne({ email });
-    const token = signToken({ 
-      userId: user ? user._id.toString() : null,
-      email 
-    });
-
     const response = NextResponse.json({
       success: true,
-      token,
       isExistingUser: !!user
     });
 
-    // Set cookie in response
-    response.cookies.set({
-      name: 'token',
-      value: token,
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      path: '/',
-      maxAge: 60 * 60 * 24 // 24 hours
-    });
+    // Only set token if user exists
+    if (user) {
+      const token = signToken({ 
+        userId: user._id.toString(),
+        email 
+      });
+
+      response.cookies.set({
+        name: 'token',
+        value: token,
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        path: '/',
+        maxAge: 60 * 60 * 24 // 24 hours
+      });
+    }
 
     return response;
 
