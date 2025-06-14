@@ -1,6 +1,7 @@
-export const coursesData = [
-  {
-      courseId: "S06",
+import { Types } from "mongoose";
+
+const pythonTurtleCourse = {
+  courseId: "S06",
   price: 2000,
   ageGroup: "8-14",
   courseName: "Python Programming with Turtle Library",
@@ -75,5 +76,6 @@ export const coursesData = [
   slug: "python-programming-with-turtle-library",
   createdAt: new Date(),
   updatedAt: new Date()
-}
-]
+};
+
+export default pythonTurtleCourse;

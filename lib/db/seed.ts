@@ -15,9 +15,9 @@ async function seedCourses() {
   try {
     await connectToDB();
 
-    // Clear existing courses
-    await Course.deleteMany({});
-    console.log('Cleared existing courses');
+    // // Clear existing courses
+    // await Course.deleteMany({});
+    // console.log('Cleared existing courses');
 
     // Insert new courses
     const insertedCourses = await Course.insertMany(coursesData);
