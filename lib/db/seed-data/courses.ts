@@ -1,79 +1,87 @@
-export const coursesData = [
-  {
-      courseId: "S06",
+const courseData = {
+  courseId: "S07",
   price: 2000,
-  ageGroup: "8-14",
-  courseName: "Python Programming with Turtle Library",
-  toolUsed: "Python",
+  ageGroup: "10-14",
+  courseName: "Create Your Own AI Voice Assistant with Azure OpenAI and MIT App Inventor",
+  toolUsed: "Azure OpenAI, MIT App Inventor",
   totalClasses: 5,
-  totalHours: 5,
-  title: "Create a Turtle Racing Game with Python!",
-  overviewDescription: "This beginner-friendly course introduces programming fundamentals — variables, loops, and conditionals — using fun and interactive Python Turtle graphics projects. Kids will build a strong foundation while creating colorful drawings and simple games.",
-  cardImage: "/coursecard-imgs/python programming.png",
+  totalHours: 7.5,
+  title: "Build Your Own AI Voice Assistant Using Azure OpenAI and MIT App Inventor",
+  overviewDescription: "Learn to build an AI voice assistant app by integrating Azure OpenAI's ChatGPT with MIT App Inventor's speech recognition and text-to-speech features. This course covers programming fundamentals, voice input, AI processing, and voice output for a hands-free chatbot experience using the latest AI technologies.",
+  cardImage: "/coursecard-imgs/mit app inventor.png",
   overviewMedia: {
     type: "video",
-    url: "/course-videos/Python Turtle Game.mp4"
+    url: "/course-videos/ai-voice-assistant.mp4"
   },
   lessons: [
     {
       lessonNumber: 1,
-      title: "Getting Started with Python Turtle and Variables",
-      description: "Introduction to Python Turtle and variables: storing values, using variables to control turtle movement and colors.",
+      title: "Introduction to AI Voice Assistants, Programming Fundamentals, and Azure OpenAI",
+      description: "Explore AI voice assistant concepts, basic programming principles, Azure OpenAI capabilities, and set up your Azure OpenAI API account.",
       hours: 1.5,
       outcomes: [
-        "Understand what variables are",
-        "Use variables to control Turtle position and pen color"
+        "Understand AI voice assistant basics and real-world applications",
+        "Get familiar with Azure OpenAI and ChatGPT models",
+        "Set up Azure OpenAI API access for your app"
       ]
     },
     {
-        lessonNumber: 2,
-        title: "Conditionals: Making Decisions with if-then-else",
-        description: "Explore conditional statements to make decisions in programs and create interactive Turtle drawings.",
-        hours: 1.5,
-        outcomes: [
-          "Understand if, elif, and else statements",
-          "Use conditionals to change Turtle behavior",
-          "Create simple interactive programs"      ]
-      },
+      lessonNumber: 2,
+      title: "Designing Voice Interfaces with MIT App Inventor",
+      description: "Create voice input and output interfaces using MIT App Inventor’s SpeechRecognizer and TextToSpeech components, focusing on user-friendly design.",
+      hours: 1.5,
+      outcomes: [
+        "Design simple and intuitive voice-enabled UI",
+        "Learn core programming concepts relevant to app development",
+        "Use SpeechRecognizer to capture voice input",
+        "Implement TextToSpeech for AI-generated voice responses"
+      ]
+    },
     {
       lessonNumber: 3,
-      title: "Loops: Drawing Repetitive Patterns",
-      description: "Learn about loops to repeat actions and create patterns with Turtle graphics.",
-      hours: 1,
+      title: "Integrating Azure OpenAI API with Voice Input",
+      description: "Connect voice input from MIT App Inventor to Azure OpenAI ChatGPT API and handle AI-generated responses effectively.",
+      hours: 1.5,
       outcomes: [
-        "Use loops to draw shapes and patterns",
-        "Reduce code repetition using loops"
+        "Send voice-to-text input to Azure OpenAI API",
+        "Receive and display AI responses in the app",
       ]
     },
     {
       lessonNumber: 4,
-      title: "Combining Variables, Loops, and Conditionals to build the logic of the game",
-      description: "Apply variables, loops, and conditionals together to build Turtle graphics projects.",
+      title: "Enhancing Voice Assistant Interaction and Latest AI Trends",
+      description: "Improve user experience by managing conversation flow, optimizing voice output, and learning about current AI trends like natural language understanding and voice synthesis.",
       hours: 1.5,
       outcomes: [
-        "Combine programming concepts effectively",
-        "Build dynamic and colorful Turtle drawings",
-        "Debug and test Python Turtle programs"
+        "Maintain simple conversation context for natural dialogue",
+        "Understand emerging AI technologies in voice assistants",
+        "Validate and sanitize user inputs for better interaction"
       ]
     },
     {
       lessonNumber: 5,
-      title: "Complete Turtle Race Game",
-      description: "Create the complete Turtle Race game using variables, loops, and conditionals to control game logic and animations.",
+      title: "Testing, Debugging, and Deploying Your AI Voice Assistant",
+      description: "Test your app on devices, debug common issues",
       hours: 1.5,
       outcomes: [
-        "Design and implement game logic"
+        "Test app functionality on emulator and real devices",
+        "Debug speech recognition and API integration issues",
+        "Deploy and share your AI voice assistant app"
       ]
     }
   ],
   keyLearningOutcomes: [
-    "Foster creativity and logical thinking by combining programming fundamentals",
-    "Build foundational programming skills",
-    "Prepare for advanced coding challenges with a strong foundation in Python basics",
+    "Understand programming fundamentals essential for AI app development",
+    "Build AI voice assistants with speech input and output using latest AI technologies",
+    "Design user-friendly voice interfaces in MIT App Inventor",
+    "Stay updated with current trends in AI voice assistant technology",
+    "Develop problem-solving and computational thinking skills",
+    "Test, debug, and deploy functional AI voice assistant apps"
   ],
   isPublished: true,
-  slug: "python-programming-with-turtle-library",
+  slug: "creating-ai-voice-assistant-azure-openai-mit-app-inventor",
   createdAt: new Date(),
   updatedAt: new Date()
-}
-]
+};
+
+export default courseData;
