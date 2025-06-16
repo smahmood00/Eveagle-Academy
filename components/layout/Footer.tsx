@@ -1,7 +1,10 @@
 import Link from "next/link"
 import { Facebook, Linkedin, Mail, MapPin, Twitter } from "lucide-react"
+import { getPublishedCourses } from "@/lib/actions/course.actions"
 
-export function Footer() {
+export async function Footer() {
+  const courses = await getPublishedCourses();
+
   return (
     <footer className="border-t border-zinc-800 py-16">
       <div className="container">
@@ -21,26 +24,13 @@ export function Footer() {
           <div>
             <h3 className="font-semibold text-lg mb-4">Summer Courses</h3>
             <ul className="space-y-3">
-              <li>
-                <Link href="/courses/ai-web-development" className="text-zinc-400 hover:text-white transition-colors">
-                  AI & Web Development
-                </Link>
-              </li>
-              <li>
-                <Link href="/courses/game-development" className="text-zinc-400 hover:text-white transition-colors">
-                  Game Development
-                </Link>
-              </li>
-              <li>
-                <Link href="/courses/robotics" className="text-zinc-400 hover:text-white transition-colors">
-                  Robotics & Programming
-                </Link>
-              </li>
-              <li>
-                <Link href="/courses/prompt-engineering" className="text-zinc-400 hover:text-white transition-colors">
-                  Prompt Engineering
-                </Link>
-              </li>
+              {courses.map((course) => (
+                <li key={course._id?.toString()}>
+                  <Link href={`/courses/${course.slug}`} className="text-zinc-400 hover:text-white transition-colors">
+                    {course.title}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 

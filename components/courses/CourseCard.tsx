@@ -67,10 +67,6 @@ export function CourseCard({
         ease: [0.16, 1, 0.3, 1],
         opacity: { duration: 0.3 }
       }}
-      whileHover={{
-        scale: isCenter ? 1.05 : 1,
-        transition: { duration: 0.2 }
-      }}
     >
       <div 
         className={`
@@ -156,7 +152,7 @@ export function CourseCard({
                 className={`
                   w-full bg-gradient-to-r from-purple-500 to-pink-500 
                   hover:from-purple-600 hover:to-pink-600 transition-all duration-300
-                  ${isCenter ? 'opacity-100 transform hover:scale-105' : 'opacity-80'}
+                  ${isCenter ? 'opacity-100' : 'opacity-80'}
                 `}
               >
                 Learn More
