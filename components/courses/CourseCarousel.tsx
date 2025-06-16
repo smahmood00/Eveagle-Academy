@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState, useMemo } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { CourseCard } from "./CourseCard";
+import CourseCard from "./CourseCard";
 import { Button } from "../ui/button";
 import { ICourse } from "@/lib/db/models/course";
 import { useMobile } from "@/hooks/use-mobile";

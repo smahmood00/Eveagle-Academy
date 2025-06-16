@@ -29,16 +29,19 @@ export function HeroAnimation() {
 
     // Particle class
     class Particle {
-      x: number
-      y: number
-      size: number
-      speedX: number
-      speedY: number
-      color: string
+      x: number = 0
+      y: number = 0
+      size: number = 1
+      speedX: number = 0
+      speedY: number = 0
+      color: string = 'hsl(200, 70%, 60%)'
+      devicePixelRatio: number = 1
 
       constructor() {
-        this.x = (Math.random() * canvas.width) / devicePixelRatio
-        this.y = (Math.random() * canvas.height) / devicePixelRatio
+        if (!canvas || !ctx) return
+        this.devicePixelRatio = window.devicePixelRatio || 1
+        this.x = (Math.random() * canvas.width) / this.devicePixelRatio
+        this.y = (Math.random() * canvas.height) / this.devicePixelRatio
         this.size = Math.random() * 5 + 1
         this.speedX = Math.random() * 2 - 1
         this.speedY = Math.random() * 2 - 1
@@ -46,19 +49,21 @@ export function HeroAnimation() {
       }
 
       update() {
+        if (!canvas) return
         this.x += this.speedX
         this.y += this.speedY
 
-        if (this.x > canvas.width / devicePixelRatio || this.x < 0) {
+        if (this.x > canvas.width / this.devicePixelRatio || this.x < 0) {
           this.speedX = -this.speedX
         }
 
-        if (this.y > canvas.height / devicePixelRatio || this.y < 0) {
+        if (this.y > canvas.height / this.devicePixelRatio || this.y < 0) {
           this.speedY = -this.speedY
         }
       }
 
       draw() {
+        if (!ctx) return
         ctx.fillStyle = this.color
         ctx.beginPath()
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2)
@@ -68,45 +73,59 @@ export function HeroAnimation() {
 
     // Create particles
     const particlesArray: Particle[] = []
-    const particleCount = 50
+    const particleCount = 25
 
     for (let i = 0; i < particleCount; i++) {
       particlesArray.push(new Particle())
     }
 
-    // Animation loop
-    const animate = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height)
+    // Animation loop with throttling
+    let lastTime = 0
+    const fps = 30 // Limit to 30 FPS
+    const interval = 1000 / fps
 
-      // Draw connections
-      ctx.strokeStyle = "rgba(120, 180, 255, 0.1)"
-      ctx.lineWidth = 1
+    const animate = (currentTime: number) => {
+      if (!canvas || !ctx) return
+      
+      const deltaTime = currentTime - lastTime
 
-      for (let i = 0; i < particlesArray.length; i++) {
-        for (let j = i; j < particlesArray.length; j++) {
-          const dx = particlesArray[i].x - particlesArray[j].x
-          const dy = particlesArray[i].y - particlesArray[j].y
-          const distance = Math.sqrt(dx * dx + dy * dy)
+      if (deltaTime > interval) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height)
+        lastTime = currentTime - (deltaTime % interval)
 
-          if (distance < 100) {
-            ctx.beginPath()
-            ctx.moveTo(particlesArray[i].x, particlesArray[i].y)
-            ctx.lineTo(particlesArray[j].x, particlesArray[j].y)
-            ctx.stroke()
+        // Draw connections
+        ctx.strokeStyle = "rgba(120, 180, 255, 0.1)"
+        ctx.lineWidth = 1
+
+        for (let i = 0; i < particlesArray.length; i++) {
+          for (let j = i; j < particlesArray.length; j++) {
+            const dx = particlesArray[i].x - particlesArray[j].x
+            const dy = particlesArray[i].y - particlesArray[j].y
+            const distance = Math.sqrt(dx * dx + dy * dy)
+
+            if (distance < 100) {
+              ctx.beginPath()
+              ctx.moveTo(particlesArray[i].x, particlesArray[i].y)
+              ctx.lineTo(particlesArray[j].x, particlesArray[j].y)
+              ctx.stroke()
+            }
           }
+        }
+
+        // Update and draw particles
+        for (let i = 0; i < particlesArray.length; i++) {
+          particlesArray[i].update()
+          particlesArray[i].draw()
         }
       }
 
-      // Update and draw particles
-      for (let i = 0; i < particlesArray.length; i++) {
-        particlesArray[i].update()
-        particlesArray[i].draw()
+      // Only request animation frame if component is mounted
+      if (canvasRef.current) {
+        requestAnimationFrame(animate)
       }
-
-      requestAnimationFrame(animate)
     }
 
-    animate()
+    animate(0)
 
     return () => {
       window.removeEventListener("resize", setCanvasDimensions)

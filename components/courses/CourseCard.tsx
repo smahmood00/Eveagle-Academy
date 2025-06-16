@@ -5,7 +5,7 @@ import { Button } from "../ui/button";
 import Image from "next/image";
 import Link from "next/link";
 import { ICourse } from "@/lib/db/models/course";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, memo } from "react";
 
 interface CourseCardProps {
   course: Partial<ICourse>;
@@ -14,12 +14,7 @@ interface CourseCardProps {
   active: number;
 }
 
-export function CourseCard({
-  course,
-  isCenter,
-  index,
-  active,
-}: CourseCardProps) {
+function CourseCard({ course, isCenter, index, active }: CourseCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const previousActive = useRef(active);
 
@@ -76,16 +71,16 @@ export function CourseCard({
         `}
       >
         {/* Image Section */}
-        <div className="relative w-full h-[190px] overflow-hidden">
+        <div className="relative w-full aspect-video sm:aspect-[4/3] mb-4 sm:mb-6 rounded-lg sm:rounded-xl overflow-hidden">
           <Image
             src={course.cardImage || '/placeholder-course.jpg'}
             alt={course.title || 'Course Image'}
             fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             className="object-cover"
-            sizes="320px"
-            priority
+            loading="lazy"
+            quality={75}
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-zinc-900/20 to-transparent" />
         </div>
 
         {/* Content Section */}
@@ -164,4 +159,6 @@ export function CourseCard({
       </div>
     </motion.div>
   );
-} 
+}
+
+export default memo(CourseCard); 

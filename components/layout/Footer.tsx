@@ -28,8 +28,8 @@ export async function Footer() {
                 <li key={course._id?.toString()}>
                   <Link href={`/courses/${course.slug}`} className="text-zinc-400 hover:text-white transition-colors">
                     {course.title}
-                  </Link>
-                </li>
+                </Link>
+              </li>
               ))}
             </ul>
           </div>
