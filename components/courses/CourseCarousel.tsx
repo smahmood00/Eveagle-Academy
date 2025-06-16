@@ -70,16 +70,16 @@ export function CourseCarousel({ courses }: CourseCarouselProps) {
 
   return (
     <div 
-      className="relative h-[750px] w-full overflow-hidden"
+      className="relative h-[800px] w-full overflow-hidden"
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
     >
       {/* Cards Container */}
       <div className="absolute inset-0 flex items-start justify-center">
-        <div className="relative w-[320px] sm:w-[960px] h-[650px]">
+        <div className="relative w-[320px] sm:w-[960px] h-[700px]">
           {/* Navigation Arrows - Positioned on sides */}
-          <div className="absolute left-0 right-0 top-[300px] -mx-9 sm:-mx-32 flex justify-between items-center z-20 pointer-events-none">
+          <div className="absolute left-0 right-0 top-[350px] -mx-9 sm:-mx-32 flex justify-between items-center z-20 pointer-events-none">
             <Button
               variant="ghost"
               size="icon"

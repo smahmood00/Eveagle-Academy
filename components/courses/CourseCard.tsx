@@ -42,7 +42,7 @@ function CourseCard({ course, isCenter, index, active }: CourseCardProps) {
   return (
     <motion.div
       className={`absolute top-0 w-[320px] cursor-pointer ${
-        isExpanded ? 'h-[650px]' : 'h-[550px]'
+        isExpanded ? 'h-[700px]' : 'h-[600px]'
       }`}
       style={{
         left: '50%',
@@ -65,13 +65,13 @@ function CourseCard({ course, isCenter, index, active }: CourseCardProps) {
     >
       <div 
         className={`
-          relative w-full h-full rounded-2xl overflow-hidden bg-zinc-900/90
+          relative w-full h-full rounded-2xl overflow-hidden bg-zinc-900/90 flex flex-col
           ${isCenter ? 'shadow-2xl shadow-purple-500/20 ring-2 ring-purple-500/20' : 'shadow-xl'}
           ${Math.abs(position) <= 1 ? 'backdrop-blur-sm' : ''}
         `}
       >
         {/* Image Section */}
-        <div className="relative w-full aspect-video sm:aspect-[4/3] mb-4 sm:mb-6 rounded-lg sm:rounded-xl overflow-hidden">
+        <div className="relative w-full aspect-video sm:aspect-[4/3] rounded-lg sm:rounded-xl overflow-hidden">
           <Image
             src={course.cardImage || '/placeholder-course.jpg'}
             alt={course.title || 'Course Image'}
@@ -84,7 +84,7 @@ function CourseCard({ course, isCenter, index, active }: CourseCardProps) {
         </div>
 
         {/* Content Section */}
-        <div className="p-6">
+        <div className="p-6 flex flex-col flex-grow">
           {/* Badges Row 1 */}
           <div className="flex gap-2 mb-2">
             <span className="px-3 py-1 rounded-full bg-purple-500/20 border border-purple-500/30 text-purple-300 text-xs">
@@ -123,17 +123,17 @@ function CourseCard({ course, isCenter, index, active }: CourseCardProps) {
                   e.stopPropagation();
                   setIsExpanded(!isExpanded);
                 }}
-                className="text-xs text-purple-400 hover:text-purple-300 mt-2 flex items-center gap-1 group"
+                className="text-xs text-purple-400 hover:text-purple-300 mt-2 flex items-center gap-1"
               >
                 {isExpanded ? (
                   <>
                     Read Less 
-                    <ChevronUp className="w-3 h-3 group-hover:-translate-y-0.5" />
+                    <ChevronUp className="w-3 h-3" />
                   </>
                 ) : (
                   <>
                     Read More 
-                    <ChevronDown className="w-3 h-3 group-hover:translate-y-0.5" />
+                    <ChevronDown className="w-3 h-3" />
                   </>
                 )}
               </button>
@@ -141,12 +141,12 @@ function CourseCard({ course, isCenter, index, active }: CourseCardProps) {
           </div>
 
           {/* Button */}
-          <div className="mt-6">
+          <div className="mt-auto pt-4">
             <Link href={`/courses/${course.slug}`}>
               <Button
                 className={`
                   w-full bg-gradient-to-r from-purple-500 to-pink-500 
-                  hover:from-purple-600 hover:to-pink-600 transition-all duration-300
+                  hover:from-purple-600 hover:to-pink-600
                   ${isCenter ? 'opacity-100' : 'opacity-80'}
                 `}
               >
