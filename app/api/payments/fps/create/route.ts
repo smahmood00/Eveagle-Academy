@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { verifyAuth } from '@/lib/auth/verify';
 import { connectToDB } from '@/lib/db/connect';
 import { Payment, IPayment } from '@/lib/db/models/payment';
+import { Enrollment, IEnrollment } from '@/lib/db/models/enrollment';
 import Course, { ICourse } from '@/lib/db/models/course';
 import { Types } from 'mongoose';
 
@@ -35,8 +36,15 @@ export async function POST(request: Request) {
     });
 
     if (existingPayment) {
+      // Check for existing enrollment
+      const existingEnrollment = await Enrollment.findOne({
+        studentId: new Types.ObjectId(studentId),
+        courseId: course._id
+      });
+
       return NextResponse.json({
         paymentId: existingPayment._id,
+        enrollmentId: existingEnrollment?._id,
         amount: existingPayment.amount,
         status: existingPayment.status,
         alreadyPending: true
@@ -52,6 +60,34 @@ export async function POST(request: Request) {
       status: 'pending',
       paymentMethod: 'fps',
     }) as IPayment;
+
+    // Check for existing enrollment
+    const existingEnrollment = await Enrollment.findOne({
+      studentId: new Types.ObjectId(studentId),
+      courseId: course._id
+    });
+
+    if (!existingEnrollment) {
+      // Convert purchaseType to match enrollment model's studentType enum
+      const enrollmentStudentType = purchaseType.toLowerCase() === 'myself' ? 'user' : 'child';
+
+      // Create enrollment with dropped status (will be updated to active when payment is verified)
+      const enrollment = await Enrollment.create({
+        studentId: new Types.ObjectId(studentId),
+        studentType: enrollmentStudentType,
+        courseId: course._id,
+        status: 'dropped', // Will be updated to 'active' when payment is verified
+        enrollmentDate: new Date()
+      }) as IEnrollment;
+
+      return NextResponse.json({
+        paymentId: payment._id,
+        enrollmentId: enrollment._id,
+        amount: payment.amount,
+        status: payment.status,
+        alreadyPending: false
+      });
+    }
 
     return NextResponse.json({
       paymentId: payment._id,
