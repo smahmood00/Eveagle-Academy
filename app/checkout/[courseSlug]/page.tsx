@@ -34,11 +34,12 @@ export default function CheckoutPage({ params }: Props) {
   const [paymentMethod, setPaymentMethod] = useState<'card' | 'fps' | null>(null);
   const router = useRouter();
   const { isAuthenticated, userEmail, userId } = useAuth();
+  const courseSlug = params.courseSlug;
 
   useEffect(() => {
     async function loadCourse() {
       try {
-        const response = await fetch(`/api/courses/${params.courseSlug}`);
+        const response = await fetch(`/api/courses/${courseSlug}`);
         if (!response.ok) {
           throw new Error('Course not found');
         }
@@ -53,7 +54,7 @@ export default function CheckoutPage({ params }: Props) {
     }
 
     loadCourse();
-  }, [params.courseSlug]);
+  }, [courseSlug]);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -106,7 +107,7 @@ export default function CheckoutPage({ params }: Props) {
       if (method === 'card') {
         // Create Stripe checkout session
         const response = await axios.post('/api/payments/stripe/create-session', {
-          courseSlug: params.courseSlug,
+          courseSlug: courseSlug,
           purchaseType: selectedChild ? 'child' : 'myself',
           studentId: selectedChild ? selectedChild._id : userId,
         });
@@ -117,7 +118,7 @@ export default function CheckoutPage({ params }: Props) {
         try {
           // Create FPS payment record
           const response = await axios.post('/api/payments/fps/create', {
-            courseSlug: params.courseSlug,
+            courseSlug: courseSlug,
             purchaseType: selectedChild ? 'child' : 'myself',
             studentId: selectedChild ? selectedChild._id : userId,
           });
@@ -167,7 +168,7 @@ export default function CheckoutPage({ params }: Props) {
       return (
         <LoginFlow 
           onLoginSuccess={handleLoginSuccess}
-          redirectPath={`/checkout/${params.courseSlug}`}
+          redirectPath={`/checkout/${courseSlug}`}
           showBackButton={false}
         />
       );
