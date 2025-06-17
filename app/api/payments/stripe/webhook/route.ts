@@ -6,6 +6,10 @@ import { Types } from 'mongoose';
 import Stripe from 'stripe';
 import { Payment, IPayment } from '@/lib/db/models/payment';
 import { Enrollment, IEnrollment } from '@/lib/db/models/enrollment';
+import { User } from '@/lib/db/models/user';
+import { Child } from '@/lib/db/models/child';
+import Course, { ICourse } from '@/lib/db/models/course';
+import { sendCourseEnrollmentEmail } from '@/lib/email/sendEmail';
 
 // This is your Stripe CLI webhook secret for testing your endpoint locally
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
@@ -131,6 +135,38 @@ export async function POST(request: Request) {
           status: 'active',
           enrollmentDate: new Date()
         });
+
+        // Get course details
+        const course = await Course.findById(courseId) as ICourse;
+        
+        // Get user details
+        const user = await User.findById(userId);
+        
+        // Get student details (either user or child)
+        let studentName = '';
+        let studentEmail = '';
+        
+        if (enrollmentStudentType === 'user') {
+          studentName = `${user?.firstName} ${user?.lastName}`;
+          studentEmail = user?.email || '';
+        } else {
+          const child = await Child.findById(studentId);
+          studentName = `${child?.firstName} ${child?.lastName}`;
+          studentEmail = user?.email || ''; // Use parent's email for child enrollments
+        }
+
+        // Send confirmation email
+        if (studentEmail && course) {
+          await sendCourseEnrollmentEmail({
+            email: studentEmail,
+            courseName: course.title,
+            studentName,
+            paymentMethod: 'credit',
+            amount: session.amount_total ? session.amount_total / 100 : 0,
+            currency: session.currency?.toUpperCase() || 'HKD'
+          });
+          console.log('✅ Confirmation email sent');
+        }
 
         console.log('✅ Enrollment created successfully:', newEnrollment);
         return NextResponse.json({ received: true });

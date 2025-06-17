@@ -4,7 +4,10 @@ import { connectToDB } from '@/lib/db/connect';
 import { Payment, IPayment } from '@/lib/db/models/payment';
 import { Enrollment, IEnrollment } from '@/lib/db/models/enrollment';
 import Course, { ICourse } from '@/lib/db/models/course';
+import { User } from '@/lib/db/models/user';
+import { Child } from '@/lib/db/models/child';
 import { Types } from 'mongoose';
+import { sendCourseEnrollmentEmail } from '@/lib/email/sendEmail';
 
 export async function POST(request: Request) {
   try {
@@ -67,18 +70,49 @@ export async function POST(request: Request) {
       courseId: course._id
     });
 
+    let enrollment: IEnrollment | null = null;
+
     if (!existingEnrollment) {
       // Convert purchaseType to match enrollment model's studentType enum
       const enrollmentStudentType = purchaseType.toLowerCase() === 'myself' ? 'user' : 'child';
 
       // Create enrollment with dropped status (will be updated to active when payment is verified)
-      const enrollment = await Enrollment.create({
+      enrollment = await Enrollment.create({
         studentId: new Types.ObjectId(studentId),
         studentType: enrollmentStudentType,
         courseId: course._id,
         status: 'dropped', // Will be updated to 'active' when payment is verified
         enrollmentDate: new Date()
       }) as IEnrollment;
+
+      // Get user details
+      const user = await User.findById(userId);
+      
+      // Get student details (either user or child)
+      let studentName = '';
+      let studentEmail = '';
+      
+      if (enrollmentStudentType === 'user') {
+        studentName = `${user?.firstName} ${user?.lastName}`;
+        studentEmail = user?.email || '';
+      } else {
+        const child = await Child.findById(studentId);
+        studentName = `${child?.firstName} ${child?.lastName}`;
+        studentEmail = user?.email || ''; // Use parent's email for child enrollments
+      }
+
+      // Send confirmation email
+      if (studentEmail) {
+        await sendCourseEnrollmentEmail({
+          email: studentEmail,
+          courseName: course.title,
+          studentName,
+          paymentMethod: 'fps',
+          amount: course.price,
+          currency: 'HKD'
+        });
+        console.log('✅ FPS payment confirmation email sent');
+      }
 
       return NextResponse.json({
         paymentId: payment._id,
