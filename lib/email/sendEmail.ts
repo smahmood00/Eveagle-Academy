@@ -15,8 +15,7 @@ export const sendOTPEmail = async (email: string, otp: string) => {
     const info = await transporter.sendMail({
       from: '"Eveagle Academy" <sanjana.mahmood10@gmail.com>',
       to: email,
-      subject: 'Authentication OTP',
-      text: `Your OTP is: ${otp}`,
+      subject: 'Verify Your Email - Eveagle Academy',
       html: `
         <div style="font-family: Arial, sans-serif; padding: 20px; max-width: 600px; margin: 0 auto;">
           <div style="text-align: center; margin-bottom: 30px;">
@@ -24,15 +23,44 @@ export const sendOTPEmail = async (email: string, otp: string) => {
             <p style="color: #6b7280; margin-top: 5px;">Empowering Young Minds Through Technology</p>
           </div>
 
-          <h2 style="color: #6366f1;">Your Authentication Code</h2>
-          <p>Here's your one-time password (OTP) for Eveagle Academy:</p>
-          <div style="background-color: #f3f4f6; padding: 20px; border-radius: 8px; text-align: center; margin: 20px 0;">
-            <h1 style="color: #4f46e5; letter-spacing: 5px; margin: 0;">${otp}</h1>
+          <div style="background-color: #4f46e5; padding: 20px; border-radius: 8px; margin: 20px 0; text-align: center;">
+            <h2 style="color: white; margin: 0;">Welcome to Eveagle Academy!</h2>
           </div>
-          <p style="color: #6b7280; font-size: 14px;">This code will expire in 5 minutes.</p>
-          <p style="color: #6b7280; font-size: 14px;">If you didn't request this code, please ignore this email.</p>
+
+          <div style="background-color: #f3f4f6; padding: 30px; border-radius: 8px; text-align: center; margin: 20px 0;">
+            <p style="color: #374151; font-size: 16px; margin: 0 0 20px 0;">Here's your verification code:</p>
+            <div style="background: linear-gradient(to right, #8B5CF6, #EC4899); padding: 2px; border-radius: 8px; margin: 0 auto; max-width: 200px;">
+              <div style="background-color: #1f2937; padding: 15px; border-radius: 6px;">
+                <h1 style="color: white; letter-spacing: 5px; margin: 0; font-size: 32px; font-family: monospace;">${otp}</h1>
+              </div>
+            </div>
+            <p style="color: #6b7280; font-size: 14px; margin-top: 20px;">This code will expire in 5 minutes</p>
+          </div>
+
+          <div style="background-color: #374151; padding: 20px; border-radius: 8px; margin: 20px 0;">
+            <h3 style="color: white; margin: 0 0 10px 0; font-size: 16px;">Security Tips:</h3>
+            <ul style="color: #9ca3af; margin: 0; padding-left: 20px; font-size: 14px;">
+              <li style="margin-bottom: 5px;">Never share this code with anyone</li>
+              <li style="margin-bottom: 5px;">Eveagle Academy will never ask for your code via email or phone</li>
+              <li style="margin-bottom: 5px;">Make sure you're on the official Eveagle Academy website</li>
+            </ul>
+          </div>
+
+          <div style="margin: 30px 0; text-align: center;">
+            <p style="color: #6b7280; font-size: 14px; margin: 0 0 15px 0;">Didn't request this code?</p>
+            <p style="color: #4b5563; font-size: 14px; margin: 0;">If you didn't request this verification code, please ignore this email or contact our support team if you have concerns about your account security.</p>
+          </div>
 
           <div style="text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
+            <div style="margin-bottom: 20px;">
+              <p style="color: #6b7280; font-size: 14px; margin: 0;">Need help? Contact us at</p>
+              <a href="mailto:eveagleacademy@gmail.com" style="color: #8B5CF6; text-decoration: none; font-size: 14px;">eveagleacademy@gmail.com</a>
+            </div>
+            <div style="margin-bottom: 20px;">
+              <a href="https://wa.me/85269661709" style="color: #8B5CF6; text-decoration: none; font-size: 14px; display: inline-flex; align-items: center;">
+                <span>Contact on WhatsApp</span>
+              </a>
+            </div>
             <p style="color: #6b7280; font-size: 12px; margin: 0;">
               © ${new Date().getFullYear()} Eveagle Academy. All rights reserved.
             </p>
@@ -40,10 +68,10 @@ export const sendOTPEmail = async (email: string, otp: string) => {
         </div>
       `
     });
-    console.log('Email sent:', info.messageId);
+    console.log('OTP email sent:', info.messageId);
     return true;
   } catch (error) {
-    console.error('Error sending email:', error);
+    console.error('Error sending OTP email:', error);
     throw error;
   }
 };
