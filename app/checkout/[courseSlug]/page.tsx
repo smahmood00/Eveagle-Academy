@@ -356,7 +356,7 @@ export default function CheckoutPage({ params }: Props) {
                   </div>
                 </Button>
 
-                <Button
+                {/* <Button
                   onClick={() => handlePaymentMethodSelect('card')}
                   disabled={paymentLoading}
                   className="w-full h-auto py-4 bg-gradient-to-r from-purple-500/10 to-pink-500/10 hover:from-purple-500/20 hover:to-pink-500/20 border border-purple-500/20"
@@ -366,7 +366,7 @@ export default function CheckoutPage({ params }: Props) {
                     <CreditCard className="h-5 w-5 text-purple-400" />
                     <span className="text-base font-medium">Pay with Card</span>
                   </div>
-                </Button>
+                </Button> */}
               </div>
 
               {/* FPS Payment Instructions */}

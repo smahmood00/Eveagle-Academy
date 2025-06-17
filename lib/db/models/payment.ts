@@ -29,7 +29,8 @@ const PaymentSchema = new Schema<IPayment>({
     type: String,
     required: false,
     unique: true,
-    sparse: true
+    sparse: true,
+    index: true
   },
   amount: {
     type: Number,

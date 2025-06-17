@@ -159,6 +159,6 @@ function CourseCard({ course, isCenter, index, active }: CourseCardProps) {
       </div>
     </motion.div>
   );
-}
+} 
 
 export default memo(CourseCard); 

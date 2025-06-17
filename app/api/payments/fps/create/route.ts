@@ -7,7 +7,7 @@ import Course, { ICourse } from '@/lib/db/models/course';
 import { User } from '@/lib/db/models/user';
 import { Child } from '@/lib/db/models/child';
 import { Types } from 'mongoose';
-import { sendCourseEnrollmentEmail } from '@/lib/email/sendEmail';
+import { sendFPSPendingEmail, sendAdminEnrollmentNotification } from '@/lib/email/sendEmail';
 
 export async function POST(request: Request) {
   try {
@@ -103,15 +103,24 @@ export async function POST(request: Request) {
 
       // Send confirmation email
       if (studentEmail) {
-        await sendCourseEnrollmentEmail({
+        await sendFPSPendingEmail({
           email: studentEmail,
           courseName: course.title,
           studentName,
-          paymentMethod: 'fps',
           amount: course.price,
           currency: 'HKD'
         });
-        console.log('✅ FPS payment confirmation email sent');
+        console.log('✅ FPS payment pending email sent');
+
+        // Send admin notification
+        await sendAdminEnrollmentNotification({
+          courseName: course.title,
+          studentName,
+          amount: course.price,
+          currency: 'HKD',
+          paymentId: (payment._id as Types.ObjectId).toString()
+        });
+        console.log('✅ Admin notification email sent');
       }
 
       return NextResponse.json({

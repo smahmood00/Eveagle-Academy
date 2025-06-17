@@ -90,38 +90,38 @@ export function HeroAnimation() {
       const deltaTime = currentTime - lastTime
 
       if (deltaTime > interval) {
-        ctx.clearRect(0, 0, canvas.width, canvas.height)
+      ctx.clearRect(0, 0, canvas.width, canvas.height)
         lastTime = currentTime - (deltaTime % interval)
 
-        // Draw connections
-        ctx.strokeStyle = "rgba(120, 180, 255, 0.1)"
-        ctx.lineWidth = 1
+      // Draw connections
+      ctx.strokeStyle = "rgba(120, 180, 255, 0.1)"
+      ctx.lineWidth = 1
 
-        for (let i = 0; i < particlesArray.length; i++) {
-          for (let j = i; j < particlesArray.length; j++) {
-            const dx = particlesArray[i].x - particlesArray[j].x
-            const dy = particlesArray[i].y - particlesArray[j].y
-            const distance = Math.sqrt(dx * dx + dy * dy)
+      for (let i = 0; i < particlesArray.length; i++) {
+        for (let j = i; j < particlesArray.length; j++) {
+          const dx = particlesArray[i].x - particlesArray[j].x
+          const dy = particlesArray[i].y - particlesArray[j].y
+          const distance = Math.sqrt(dx * dx + dy * dy)
 
-            if (distance < 100) {
-              ctx.beginPath()
-              ctx.moveTo(particlesArray[i].x, particlesArray[i].y)
-              ctx.lineTo(particlesArray[j].x, particlesArray[j].y)
-              ctx.stroke()
-            }
+          if (distance < 100) {
+            ctx.beginPath()
+            ctx.moveTo(particlesArray[i].x, particlesArray[i].y)
+            ctx.lineTo(particlesArray[j].x, particlesArray[j].y)
+            ctx.stroke()
           }
         }
+      }
 
-        // Update and draw particles
-        for (let i = 0; i < particlesArray.length; i++) {
-          particlesArray[i].update()
-          particlesArray[i].draw()
+      // Update and draw particles
+      for (let i = 0; i < particlesArray.length; i++) {
+        particlesArray[i].update()
+        particlesArray[i].draw()
         }
       }
 
       // Only request animation frame if component is mounted
       if (canvasRef.current) {
-        requestAnimationFrame(animate)
+      requestAnimationFrame(animate)
       }
     }
 

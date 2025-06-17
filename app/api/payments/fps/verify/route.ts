@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { verifyAuth } from '@/lib/auth/verify';
+import { verifyAdminAuth } from '@/lib/auth/verifyAdmin';
 import { connectToDB } from '@/lib/db/connect';
 import { Payment, IPayment } from '@/lib/db/models/payment';
 import { Enrollment, IEnrollment } from '@/lib/db/models/enrollment';
@@ -7,20 +7,14 @@ import Course, { ICourse } from '@/lib/db/models/course';
 import { User } from '@/lib/db/models/user';
 import { Child } from '@/lib/db/models/child';
 import { Types } from 'mongoose';
-import { sendCourseEnrollmentEmail } from '@/lib/email/sendEmail';
+import { sendEnrollmentConfirmationEmail } from '@/lib/email/sendEmail';
 
 export async function POST(request: Request) {
   try {
-    const userId = await verifyAuth();
-    if (!userId) {
+    const adminId = await verifyAdminAuth();
+    if (!adminId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
-
-    // TODO: Add admin check here
-    // const user = await User.findById(userId);
-    // if (!user?.isAdmin) {
-    //   return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    // }
 
     const { paymentId } = await request.json();
 
@@ -93,11 +87,10 @@ export async function POST(request: Request) {
 
     // Send confirmation email
     if (studentEmail && course) {
-      await sendCourseEnrollmentEmail({
+      await sendEnrollmentConfirmationEmail({
         email: studentEmail,
         courseName: course.title,
         studentName,
-        paymentMethod: 'fps',
         amount: payment.amount,
         currency: payment.currency
       });
