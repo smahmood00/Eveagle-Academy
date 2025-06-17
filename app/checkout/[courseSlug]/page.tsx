@@ -1,7 +1,7 @@
 "use client";
 
 import { notFound, useRouter } from "next/navigation";
-import { Clock, Book, Wrench, User, CreditCard, Banknote } from "lucide-react";
+import { Clock, Book, Wrench, User, CreditCard, Banknote, ArrowUpRight } from "lucide-react";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { LoginFlow } from "@/components/auth/LoginFlow";
@@ -14,6 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import axios from "axios";
 import { IChild } from "@/lib/db/models/child";
+import Link from "next/link";
 
 interface Props {
   params: { courseSlug: string };
@@ -30,6 +31,7 @@ export default function CheckoutPage({ params }: Props) {
   const [error, setError] = useState<string>('');
   const [paymentLoading, setPaymentLoading] = useState(false);
   const [paymentError, setPaymentError] = useState<string>('');
+  const [paymentMethod, setPaymentMethod] = useState<'card' | 'fps' | null>(null);
   const router = useRouter();
   const { isAuthenticated, userEmail, userId } = useAuth();
 
@@ -99,6 +101,7 @@ export default function CheckoutPage({ params }: Props) {
     try {
       setPaymentLoading(true);
       setPaymentError('');
+      setPaymentMethod(method);
 
       if (method === 'card') {
         // Create Stripe checkout session
@@ -111,20 +114,38 @@ export default function CheckoutPage({ params }: Props) {
         // Redirect to Stripe checkout
         window.location.href = response.data.sessionUrl;
       } else {
-        // Handle FPS payment
-        console.log('FPS payment selected', {
-          courseSlug: params.courseSlug,
-          purchaseType: selectedChild ? 'child' : 'myself',
-          studentId: selectedChild ? selectedChild._id : userId,
-        });
+        try {
+          // Create FPS payment record
+          const response = await axios.post('/api/payments/fps/create', {
+            courseSlug: params.courseSlug,
+            purchaseType: selectedChild ? 'child' : 'myself',
+            studentId: selectedChild ? selectedChild._id : userId,
+          });
+
+          if (response.data.alreadyPending) {
+            setPaymentError('You already have a pending FPS payment for this course. Please complete your existing payment or contact support if you need assistance.');
+          }
+
+          // Show the FPS payment instructions
+          setPaymentLoading(false);
+        } catch (fpsError: any) {
+          throw new Error(fpsError.response?.data?.error || 'Failed to create FPS payment record');
+        }
       }
     } catch (err: any) {
-      setPaymentError(err.response?.data?.message || 'Failed to process payment. Please try again.');
+      setPaymentError(err.message || 'Failed to process payment. Please try again.');
       console.error('Payment error:', err);
-    } finally {
+      setPaymentMethod(null);
       setPaymentLoading(false);
     }
   };
+
+  // Reset payment states when changing steps
+  useEffect(() => {
+    setPaymentMethod(null);
+    setPaymentError('');
+    setPaymentLoading(false);
+  }, [step]);
 
   if (loading || !course) {
     return (
@@ -304,9 +325,21 @@ export default function CheckoutPage({ params }: Props) {
               </div>
 
               {paymentError && (
-                <p className="text-sm text-red-400 p-3 rounded-lg bg-red-500/10 border border-red-500/20">
+                <div className={`text-sm p-3 rounded-lg ${
+                  paymentError.includes('already have a pending') 
+                    ? 'text-amber-400 bg-amber-500/10 border border-amber-500/20'
+                    : 'text-red-400 bg-red-500/10 border border-red-500/20'
+                }`}>
                   {paymentError}
-                </p>
+                </div>
+              )}
+
+              {/* Payment Status */}
+              {paymentLoading && (
+                <div className="text-sm text-amber-400 p-3 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center gap-2">
+                  <div className="animate-spin rounded-full h-4 w-4 border-2 border-amber-500 border-t-transparent"></div>
+                  <span>Processing payment...</span>
+                </div>
               )}
 
               {/* Payment Buttons */}
@@ -336,11 +369,47 @@ export default function CheckoutPage({ params }: Props) {
                 </Button>
               </div>
 
+              {/* FPS Payment Instructions */}
+              <div 
+                className={`
+                  space-y-4 p-4 rounded-xl border
+                  transition-all duration-300 ease-in-out
+                  ${paymentMethod === 'fps' 
+                    ? 'opacity-100 h-auto border-purple-500/20 bg-purple-500/5' 
+                    : 'opacity-0 h-0 border-transparent overflow-hidden'
+                  }
+                `}
+              >
+                <div className="space-y-2">
+                  <h3 className="font-medium text-purple-400">FPS Payment Instructions</h3>
+                  <div className="space-y-3 text-sm text-zinc-400">
+                    <p>Please pay <span className="text-white font-medium">HKD {course.price}</span> to:</p>
+                    <div className="p-3 rounded-lg bg-zinc-900/50 border border-purple-500/20">
+                      <p className="text-white font-medium">FPS ID: <span className="text-purple-400">169529179</span></p>
+                      <p className="text-white font-medium">(Eveagle Academy)</p>
+                    </div>
+                    <div className="space-y-1">
+                      <p>• Complete payment within 24 hours</p>
+                      <p>• After payment, send the screenshot to us on WhatsApp</p>
+                      <p>• Your payment status will remain as pending until verification</p>
+                    </div>
+                    <Link 
+                      href="https://wa.me/85269661709"
+                      target="_blank"
+                      className="inline-flex items-center gap-2 text-purple-400 hover:text-purple-300 transition-colors"
+                    >
+                      <span>Send Payment Proof on WhatsApp</span>
+                      <ArrowUpRight className="w-4 h-4" />
+                    </Link>
+                  </div>
+                </div>
+              </div>
+
               {/* Payment Notes */}
               <div className="text-xs text-zinc-500 space-y-1">
                 <p>• All payments are processed securely</p>
                 <p>• FPS payments are processed in HKD</p>
-                <p>• Card payments are processed in HKD</p>
+                <p>• Card payments are processed via Stripe</p>
               </div>
             </div>
           </div>
@@ -389,7 +458,7 @@ export default function CheckoutPage({ params }: Props) {
                     HKD {course.price}
                   </div>
                   <p className="text-xs sm:text-sm text-zinc-400 mt-1">
-                    One-time payment • Lifetime access
+                    One-time payment 
                   </p>
                 </div>
               </div>

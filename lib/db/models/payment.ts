@@ -3,11 +3,13 @@ import { Schema, model, models, Document, Types } from 'mongoose';
 export interface IPayment extends Document {
   userId: Types.ObjectId;
   courseId: Types.ObjectId;
-  stripeSessionId: string;
+  stripeSessionId?: string;
   amount: number;
   currency: string;
   status: 'pending' | 'completed' | 'failed' | 'refunded';
-  paymentMethod: 'credit' | 'debit' | 'other';
+  paymentMethod: 'credit' | 'debit' | 'fps' | 'other';
+  fpsScreenshotUrl?: string;
+  fpsVerifiedAt?: Date;
   createdAt: Date;
   completedAt?: Date;
 }
@@ -25,8 +27,9 @@ const PaymentSchema = new Schema<IPayment>({
   },
   stripeSessionId: {
     type: String,
-    required: true,
-    unique: true
+    required: false,
+    unique: true,
+    sparse: true
   },
   amount: {
     type: Number,
@@ -46,7 +49,15 @@ const PaymentSchema = new Schema<IPayment>({
   paymentMethod: {
     type: String,
     required: true,
-    enum: ['credit', 'debit', 'other']
+    enum: ['credit', 'debit', 'fps', 'other']
+  },
+  fpsScreenshotUrl: {
+    type: String,
+    required: false
+  },
+  fpsVerifiedAt: {
+    type: Date,
+    required: false
   },
   createdAt: {
     type: Date,
